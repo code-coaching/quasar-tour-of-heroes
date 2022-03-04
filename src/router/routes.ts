@@ -1,5 +1,11 @@
 import { RouteRecordRaw } from 'vue-router';
 
+export const ROUTE_NAMES = {
+  DASHBOARD: 'Dashboard',
+  HERO_LIST: 'HeroList',
+  HERO_DETAILS: 'HeroDetails',
+};
+
 const routes: RouteRecordRaw[] = [
 
   {
@@ -7,20 +13,20 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        name: 'Dashboard',
+        name: ROUTE_NAMES.DASHBOARD,
         path: '',
-        component: () => import('pages/Dashboard.vue')
+        component: () => import('pages/Dashboard.vue'),
       },
       {
-        name: 'HeroList',
+        name: ROUTE_NAMES.HERO_LIST,
         path: '/heroes',
-        component: () => import('pages/HeroList.vue')
+        component: () => import('pages/HeroList.vue'),
       },
       {
-        name: 'HeroDetails',
+        name: ROUTE_NAMES.HERO_DETAILS,
         path: '/heroes/:id',
-        component: () => import('pages/HeroDetails.vue')
-      }
+        component: () => import('pages/HeroDetails.vue'),
+      },
     ],
   },
 

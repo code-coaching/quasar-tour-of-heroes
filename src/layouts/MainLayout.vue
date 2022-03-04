@@ -2,8 +2,8 @@
   <div class="layout-container">
     <div class="title">Tour of Heroes</div>
     <div class="button-container">
-      <button @click="navigate('Dashboard')">Dashboard</button>
-      <button @click="navigate('HeroList')">Heroes</button>
+      <button @click="navigate(ROUTE_NAMES.DASHBOARD)">Dashboard</button>
+      <button @click="navigate(ROUTE_NAMES.HERO_LIST)">Heroes</button>
     </div>
 
     <router-view></router-view>
@@ -13,6 +13,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
+import { ROUTE_NAMES } from '../router/routes';
 
 export default defineComponent({
   setup() {
@@ -26,6 +27,7 @@ export default defineComponent({
 
     return {
       navigate,
+      ROUTE_NAMES,
     };
   },
 });
