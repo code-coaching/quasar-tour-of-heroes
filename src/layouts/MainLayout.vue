@@ -19,10 +19,10 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
-    const navigate = (path: string) => {
+    const navigate = (name: string) => {
       // void router.push({ name: 'Dashboard' }); Navigate to Dashboard
       // void router.push({ name: 'HeroList' }); Navigate to HeroList
-      void router.push({ name: path });
+      void router.push({ name });
     };
 
     return {
