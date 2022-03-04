@@ -2,8 +2,8 @@
   <div class="layout-container">
     <div class="title">Tour of Heroes</div>
     <div class="button-container">
-      <button @click="navigate('/')">Dashboard</button>
-      <button @click="navigate('/heroes')">Heroes</button>
+      <button @click="navigate('Dashboard')">Dashboard</button>
+      <button @click="navigate('HeroList')">Heroes</button>
     </div>
 
     <router-view></router-view>
@@ -19,9 +19,9 @@ export default defineComponent({
     const router = useRouter();
 
     const navigate = (path: string) => {
-      // void router.push('/); Navigate to Dashboard
-      // void router.push('/heroes'); Navigate to HeroList
-      void router.push(path);
+      // void router.push({ name: 'Dashboard' }); Navigate to Dashboard
+      // void router.push({ name: 'HeroList' }); Navigate to HeroList
+      void router.push({ name: path });
     };
 
     return {
