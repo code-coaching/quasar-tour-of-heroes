@@ -17,7 +17,7 @@
   </div>
 
   <div v-if="selectedHero">
-    <div class="title">{{ selectedHero.name }} is my hero</div>
+    <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
     <button>Details</button>
   </div>
 </template>
@@ -51,10 +51,13 @@ export default defineComponent({
       selectedHero.value = hero;
     };
 
+    const upperCase = (str: string) => str.toUpperCase();
+
     return {
       heroes,
       selectedHero,
       onClickHero,
+      upperCase
     };
   },
 });
