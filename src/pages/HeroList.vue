@@ -19,6 +19,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
+interface Hero {
+  number: number;
+  name: string;
+}
+
 export default defineComponent({
   setup() {
     const selectedHero = ref();
@@ -36,9 +41,9 @@ export default defineComponent({
       { number: 20, name: 'Tornado' },
     ]);
 
-    function onClickHero(hero: { number: number; name: string }) {
+    const onClickHero = (hero: Hero) => {
       selectedHero.value = hero;
-    }
+    };
 
     return {
       heroes,
