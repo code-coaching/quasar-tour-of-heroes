@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { upperCase } from 'components/utils';
 
 interface Hero {
   number: number;
@@ -51,13 +52,11 @@ export default defineComponent({
       selectedHero.value = hero;
     };
 
-    const upperCase = (str: string) => str.toUpperCase();
-
     return {
       heroes,
       selectedHero,
       onClickHero,
-      upperCase
+      upperCase,
     };
   },
 });
