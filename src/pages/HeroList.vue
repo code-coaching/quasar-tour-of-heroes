@@ -3,6 +3,9 @@
 
   <div class="hero-list">
     <div
+      :class="{
+        'hero--active': hero.number === selectedHero?.number,
+      }"
       class="hero"
       v-for="(hero, index) in heroes"
       :key="index"
@@ -13,7 +16,10 @@
     </div>
   </div>
 
-  <div>{{ selectedHero }}</div>
+  <div v-if="selectedHero">
+    <div class="title">{{ selectedHero.name }} is my hero</div>
+    <button>Details</button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -79,6 +85,12 @@ export default defineComponent({
   border-radius: 0.5rem;
 
   &:hover {
+    background-color: #cfd8dc;
+    color: white;
+    margin-left: 0.25rem;
+  }
+
+  &--active {
     background-color: #cfd8dc;
     color: white;
     margin-left: 0.25rem;
