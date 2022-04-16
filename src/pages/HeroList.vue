@@ -18,13 +18,14 @@
 
   <div v-if="selectedHero">
     <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
-    <button>Details</button>
+    <StyledButton>Details</StyledButton>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { upperCase } from 'components/utils';
+import StyledButton from 'components/StyledButton.vue';
 
 interface Hero {
   number: number;
@@ -32,6 +33,9 @@ interface Hero {
 }
 
 export default defineComponent({
+  components: {
+    StyledButton,
+  },
   setup() {
     const selectedHero = ref();
 
