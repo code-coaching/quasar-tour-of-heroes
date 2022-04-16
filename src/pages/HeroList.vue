@@ -18,14 +18,16 @@
 
   <div v-if="selectedHero">
     <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
-    <StyledButton>Details</StyledButton>
+    <StyledButton @click="onDetailsClick()">Details</StyledButton>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { upperCase } from 'components/utils';
+import { useRouter } from 'vue-router';
 import StyledButton from 'components/StyledButton.vue';
+import { ROUTE_NAMES } from 'src/router/routes';
 
 interface Hero {
   number: number;
@@ -37,7 +39,8 @@ export default defineComponent({
     StyledButton,
   },
   setup() {
-    const selectedHero = ref();
+    const router = useRouter();
+    const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
 
     const heroes = ref([
       { number: 11, name: 'Mr. Nice' },
@@ -56,11 +59,21 @@ export default defineComponent({
       selectedHero.value = hero;
     };
 
+    const onDetailsClick = () => {
+      void router.push({
+        name: ROUTE_NAMES.HERO_DETAILS,
+        params: {
+          id: selectedHero.value.number,
+        },
+      });
+    };
+
     return {
       heroes,
       selectedHero,
       onClickHero,
       upperCase,
+      onDetailsClick,
     };
   },
 });
