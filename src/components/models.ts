@@ -1,1 +1,4 @@
-// Placeholder file for exporting interfaces
+export interface Hero {
+  number: number;
+  name: string;
+}

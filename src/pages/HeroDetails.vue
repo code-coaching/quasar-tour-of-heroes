@@ -12,11 +12,7 @@
 <script lang="ts">
 import { defineComponent, ref, Ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
-
-interface Hero {
-  number: number;
-  name: string;
-}
+import { Hero } from 'components/models';
 
 export default defineComponent({
   components: {

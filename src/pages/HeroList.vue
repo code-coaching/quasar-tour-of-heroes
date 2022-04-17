@@ -28,11 +28,7 @@ import { upperCase } from 'components/utils';
 import { useRouter } from 'vue-router';
 import StyledButton from 'components/StyledButton.vue';
 import { ROUTE_NAMES } from 'src/router/routes';
-
-interface Hero {
-  number: number;
-  name: string;
-}
+import { Hero } from 'components/models';
 
 export default defineComponent({
   components: {
