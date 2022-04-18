@@ -7,6 +7,8 @@
 
     <StyledButton>Back</StyledButton>
   </div>
+
+  <div v-else class="title">Hero not found!</div>
 </template>
 
 <script lang="ts">
