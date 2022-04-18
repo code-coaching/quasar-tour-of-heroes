@@ -5,7 +5,7 @@
     <div>id: {{ hero.number }}</div>
     <div>name: <input :value="hero.name" /></div>
 
-    <StyledButton>Back</StyledButton>
+    <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
   </div>
 
   <div v-else class="title">Hero not found!</div>
@@ -15,7 +15,8 @@
 import { defineComponent, onBeforeMount, ref, Ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
 import { Hero } from 'components/models';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { ROUTE_NAMES } from 'src/router/routes';
 
 export default defineComponent({
   components: {
@@ -23,6 +24,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const hero: Ref<Hero> = ref() as Ref<Hero>;
 
     onBeforeMount(() => {
@@ -46,8 +48,11 @@ export default defineComponent({
       { number: 20, name: 'Tornado' },
     ]);
 
+    const moveBack = () => void router.push({ name: ROUTE_NAMES.HERO_LIST });
+
     return {
       hero,
+      moveBack,
     };
   },
 });
@@ -57,5 +62,9 @@ export default defineComponent({
 .title {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.back-button {
+  margin-top: 1rem;
 }
 </style>
