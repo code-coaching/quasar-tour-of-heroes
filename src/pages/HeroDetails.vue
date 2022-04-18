@@ -10,16 +10,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import { defineComponent, onBeforeMount, ref, Ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
 import { Hero } from 'components/models';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
     StyledButton,
   },
   setup() {
-    const hero: Ref<Hero> = ref({ number: 15, name: 'Magneta' }) as Ref<Hero>;
+    const route = useRoute();
+    const hero: Ref<Hero> = ref() as Ref<Hero>;
+
+    onBeforeMount(() => {
+      const { id } = route.params;
+      if (id) {
+        const matchingHero = heroes.value.find((h) => h.number === +id);
+        if (matchingHero) hero.value = matchingHero;
+      }
+    });
+
+    const heroes = ref([
+      { number: 11, name: 'Mr. Nice' },
+      { number: 12, name: 'Narco' },
+      { number: 13, name: 'Bombasto' },
+      { number: 14, name: 'Celeritas' },
+      { number: 15, name: 'Magneta' },
+      { number: 16, name: 'RubberMan' },
+      { number: 17, name: 'Dynama' },
+      { number: 18, name: 'Dr IQ' },
+      { number: 19, name: 'Magma' },
+      { number: 20, name: 'Tornado' },
+    ]);
 
     return {
       hero,
