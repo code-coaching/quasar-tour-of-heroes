@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router';
 import StyledButton from 'components/StyledButton.vue';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { Hero } from 'components/models';
+import { useHeroes } from 'src/services/hero.service';
 
 export default defineComponent({
   components: {
@@ -37,19 +38,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
-
-    const heroes = ref([
-      { number: 11, name: 'Mr. Nice' },
-      { number: 12, name: 'Narco' },
-      { number: 13, name: 'Bombasto' },
-      { number: 14, name: 'Celeritas' },
-      { number: 15, name: 'Magneta' },
-      { number: 16, name: 'RubberMan' },
-      { number: 17, name: 'Dynama' },
-      { number: 18, name: 'Dr IQ' },
-      { number: 19, name: 'Magma' },
-      { number: 20, name: 'Tornado' },
-    ]);
+    const { heroes } = useHeroes();
 
     const onClickHero = (hero: Hero) => {
       selectedHero.value = hero;
