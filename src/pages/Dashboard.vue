@@ -2,12 +2,28 @@
   <div class="title">Top Heroes</div>
 
   <div class="top-heroes">
-    <div class="top-hero">Narco</div>
-    <div class="top-hero">Bombasto</div>
-    <div class="top-hero">Celeritas</div>
-    <div class="top-hero">Magneta</div>
+    <div v-for="(hero, index) in topHeroes" :key="index" class="top-hero">
+      {{ hero.name }}
+    </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useHeroes } from 'src/services/hero.service';
+
+export default defineComponent({
+  setup() {
+    const { heroes } = useHeroes();
+
+    const topHeroes = heroes.value.slice(0, 4);
+
+    return {
+      topHeroes,
+    };
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 .title {
