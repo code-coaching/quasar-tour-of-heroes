@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import { defineComponent } from 'vue';
 import { upperCase } from 'components/utils';
 import { useRouter } from 'vue-router';
 import StyledButton from 'components/StyledButton.vue';
@@ -37,8 +37,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
-    const { heroes } = useHeroes();
+    const { heroes, selectedHero } = useHeroes();
 
     const onClickHero = (hero: Hero) => {
       selectedHero.value = hero;

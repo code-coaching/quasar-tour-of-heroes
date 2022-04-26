@@ -1,5 +1,6 @@
 
-import { ref } from 'vue';
+import { Hero } from 'src/components/models';
+import { ref, Ref } from 'vue';
 
 const heroes = ref([
   { number: 11, name: 'Mr. Nice' },
@@ -14,9 +15,12 @@ const heroes = ref([
   { number: 20, name: 'Tornado' },
 ]);
 
+const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
+
 const useHeroes = () => {
   return {
-    heroes
+    heroes,
+    selectedHero,
   }
 }
 
