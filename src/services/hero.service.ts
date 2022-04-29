@@ -18,9 +18,13 @@ const heroes = ref([
 const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
 
 const useHeroes = () => {
+
+  const topHeroes = heroes.value.slice(0, 4);
+
   return {
     heroes,
     selectedHero,
+    topHeroes
   }
 }
 

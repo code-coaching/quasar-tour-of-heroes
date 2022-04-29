@@ -14,9 +14,7 @@ import { useHeroes } from 'src/services/hero.service';
 
 export default defineComponent({
   setup() {
-    const { heroes } = useHeroes();
-
-    const topHeroes = heroes.value.slice(0, 4);
+    const { topHeroes } = useHeroes();
 
     return {
       topHeroes,
