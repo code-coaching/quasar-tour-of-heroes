@@ -2,7 +2,12 @@
   <div class="title">Top Heroes</div>
 
   <div class="top-heroes">
-    <div v-for="(hero, index) in topHeroes" :key="index" class="top-hero">
+    <div
+      v-for="(hero, index) in topHeroes"
+      :key="index"
+      class="top-hero"
+      @click="navigateToHero(hero)"
+    >
       {{ hero.name }}
     </div>
   </div>
@@ -11,13 +16,27 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useHeroes } from 'src/services/hero.service';
+import { ROUTE_NAMES } from 'src/router/routes';
+import { useRouter } from 'vue-router';
+import { Hero } from 'src/components/models';
 
 export default defineComponent({
   setup() {
     const { topHeroes } = useHeroes();
+    const router = useRouter();
+
+    const navigateToHero = (hero: Hero) => {
+      void router.push({
+        name: ROUTE_NAMES.HERO_DETAILS,
+        params: {
+          id: hero.number,
+        },
+      });
+    };
 
     return {
       topHeroes,
+      navigateToHero,
     };
   },
 });

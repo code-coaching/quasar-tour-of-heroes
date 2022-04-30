@@ -16,7 +16,6 @@ import { defineComponent, onBeforeMount, ref, Ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
 import { Hero } from 'components/models';
 import { useRoute, useRouter } from 'vue-router';
-import { ROUTE_NAMES } from 'src/router/routes';
 import { useHeroes } from 'src/services/hero.service';
 
 export default defineComponent({
@@ -37,7 +36,7 @@ export default defineComponent({
       }
     });
 
-    const moveBack = () => void router.push({ name: ROUTE_NAMES.HERO_LIST });
+    const moveBack = () => void router.go(-1);
 
     return {
       hero,
