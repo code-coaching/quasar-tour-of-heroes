@@ -16,9 +16,12 @@
     </div>
   </div>
 
-  <div v-if="selectedHero">
+  <div v-if="selectedHero?.name">
     <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
-    <StyledButton @click="onDetailsClick()">Details</StyledButton>
+    <ButtonGroup>
+      <StyledButton @click="onDetailsClick()">Details</StyledButton>
+      <StyledButton negative @click="onDeleteClick()">Delete</StyledButton>
+    </ButtonGroup>
   </div>
 </template>
 
@@ -30,14 +33,16 @@ import StyledButton from 'components/StyledButton.vue';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { Hero } from 'components/models';
 import { useHeroes } from 'src/services/hero.service';
+import ButtonGroup from 'src/components/ButtonGroup.vue';
 
 export default defineComponent({
   components: {
     StyledButton,
+    ButtonGroup,
   },
   setup() {
     const router = useRouter();
-    const { heroes, selectedHero } = useHeroes();
+    const { heroes, selectedHero, deleteHero, resetSelectedHero } = useHeroes();
 
     const onClickHero = (hero: Hero) => {
       selectedHero.value = hero;
@@ -52,12 +57,18 @@ export default defineComponent({
       });
     };
 
+    const onDeleteClick = () => {
+      deleteHero(selectedHero.value);
+      resetSelectedHero();
+    };
+
     return {
       heroes,
       selectedHero,
       onClickHero,
       upperCase,
       onDetailsClick,
+      onDeleteClick,
     };
   },
 });

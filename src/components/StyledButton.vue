@@ -1,5 +1,10 @@
 <template>
-  <button :class="{ primary: primary }">
+  <button
+    :class="{
+      primary: primary,
+      negative: negative,
+    }"
+  >
     <slot />
   </button>
 </template>
@@ -10,6 +15,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     primary: {
+      type: Boolean,
+      default: false,
+    },
+    negative: {
       type: Boolean,
       default: false,
     },
@@ -39,6 +48,16 @@ button {
 
   &:hover {
     background-color: darken($primary, 5%);
+    color: white;
+  }
+}
+
+.negative {
+  background-color: var(--q-negative);
+  color: white;
+
+  &:hover {
+    background-color: darken($negative, 5%);
     color: white;
   }
 }

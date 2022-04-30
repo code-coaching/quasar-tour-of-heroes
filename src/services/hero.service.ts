@@ -1,6 +1,6 @@
 
 import { Hero } from 'src/components/models';
-import { ref, Ref } from 'vue';
+import { ref } from 'vue';
 
 const heroes = ref([
   { number: 11, name: 'Mr. Nice' },
@@ -15,7 +15,7 @@ const heroes = ref([
   { number: 20, name: 'Tornado' },
 ]);
 
-const selectedHero: Ref<Hero> = ref() as Ref<Hero>;
+const selectedHero = ref({} as Hero);
 
 const useHeroes = () => {
 
@@ -30,12 +30,20 @@ const useHeroes = () => {
     if (matchingHero) return { ...matchingHero };
   }
 
+  const deleteHero = (hero: Hero) => {
+    heroes.value = heroes.value.filter(h => h.number !== hero.number);
+  }
+
+  const resetSelectedHero = () => selectedHero.value = {} as Hero;
+
   return {
     heroes,
     selectedHero,
     topHeroes,
     editHero,
-    findHero
+    findHero,
+    deleteHero,
+    resetSelectedHero,
   }
 }
 
