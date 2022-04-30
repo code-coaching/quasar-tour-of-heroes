@@ -7,7 +7,9 @@
 
     <div class="buttons">
       <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
-      <StyledButton class="save-button" @click="saveHero()">Save</StyledButton>
+      <StyledButton primary class="save-button" @click="saveHero()">
+        Save
+      </StyledButton>
     </div>
   </div>
 

@@ -1,8 +1,21 @@
 <template>
-  <button>
+  <button :class="{ primary: primary }">
     <slot />
   </button>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    primary: {
+      type: Boolean,
+      default: false,
+    },
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 button {
@@ -17,6 +30,16 @@ button {
     background-color: darken(#eeeeee, 10%);
     color: #0096e8;
     cursor: pointer;
+  }
+}
+
+.primary {
+  background-color: var(--q-primary);
+  color: white;
+
+  &:hover {
+    background-color: darken($primary, 5%);
+    color: white;
   }
 }
 </style>
