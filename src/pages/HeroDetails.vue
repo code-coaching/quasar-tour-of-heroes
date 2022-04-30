@@ -5,8 +5,10 @@
     <div>id: {{ hero.number }}</div>
     <div>name: <input v-model="hero.name" /></div>
 
-    <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
-    <StyledButton class="save-button" @click="saveHero()">Save</StyledButton>
+    <div class="buttons">
+      <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
+      <StyledButton class="save-button" @click="saveHero()">Save</StyledButton>
+    </div>
   </div>
 
   <div v-else class="title">Hero not found!</div>
@@ -55,7 +57,9 @@ export default defineComponent({
   margin-bottom: 1rem;
 }
 
-.back-button {
+.buttons {
   margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
