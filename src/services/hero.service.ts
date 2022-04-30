@@ -21,10 +21,21 @@ const useHeroes = () => {
 
   const topHeroes = heroes.value.slice(0, 4);
 
+  const editHero = (hero: Hero) => {
+    heroes.value = heroes.value.map(h => h.number === hero.number ? hero : h);
+  }
+
+  const findHero = (id: number): Hero | undefined => {
+    const matchingHero = heroes.value.find((h) => h.number === +id);
+    if (matchingHero) return { ...matchingHero };
+  }
+
   return {
     heroes,
     selectedHero,
-    topHeroes
+    topHeroes,
+    editHero,
+    findHero
   }
 }
 

@@ -6,6 +6,7 @@
     <div>name: <input v-model="hero.name" /></div>
 
     <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
+    <StyledButton class="save-button" @click="saveHero()">Save</StyledButton>
   </div>
 
   <div v-else class="title">Hero not found!</div>
@@ -26,21 +27,23 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const hero: Ref<Hero> = ref() as Ref<Hero>;
-    const { heroes } = useHeroes();
+    const { editHero, findHero } = useHeroes();
 
     onBeforeMount(() => {
       const { id } = route.params;
       if (id) {
-        const matchingHero = heroes.value.find((h) => h.number === +id);
+        const matchingHero = findHero(+id);
         if (matchingHero) hero.value = matchingHero;
       }
     });
 
     const moveBack = () => void router.go(-1);
+    const saveHero = () => editHero(hero.value);
 
     return {
       hero,
       moveBack,
+      saveHero,
     };
   },
 });
