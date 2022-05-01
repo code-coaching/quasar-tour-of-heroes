@@ -4,6 +4,7 @@ export const ROUTE_NAMES = {
   DASHBOARD: 'Dashboard',
   HERO_LIST: 'HeroList',
   HERO_DETAILS: 'HeroDetails',
+  HERO_ADD: 'HeroAdd',
 };
 
 const routes: RouteRecordRaw[] = [
@@ -21,6 +22,11 @@ const routes: RouteRecordRaw[] = [
         name: ROUTE_NAMES.HERO_LIST,
         path: '/heroes',
         component: () => import('pages/HeroList.vue'),
+      },
+      {
+        name: ROUTE_NAMES.HERO_ADD,
+        path: '/heroes/add',
+        component: () => import('pages/HeroAdd.vue'),
       },
       {
         name: ROUTE_NAMES.HERO_DETAILS,

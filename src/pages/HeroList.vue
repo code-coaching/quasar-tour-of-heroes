@@ -16,6 +16,10 @@
     </div>
   </div>
 
+  <StyledButton class="new-hero-button" primary @click="onNewClick()">
+    New Hero
+  </StyledButton>
+
   <div v-if="selectedHero?.name">
     <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
     <ButtonGroup>
@@ -62,6 +66,8 @@ export default defineComponent({
       resetSelectedHero();
     };
 
+    const onNewClick = () => void router.push({ name: ROUTE_NAMES.HERO_ADD });
+
     return {
       heroes,
       selectedHero,
@@ -69,6 +75,7 @@ export default defineComponent({
       upperCase,
       onDetailsClick,
       onDeleteClick,
+      onNewClick,
     };
   },
 });
@@ -125,5 +132,9 @@ export default defineComponent({
   padding: 0.5rem;
   padding-left: 0.75rem;
   font-weight: 600;
+}
+
+.new-hero-button {
+  margin-top: 1rem;
 }
 </style>

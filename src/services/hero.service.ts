@@ -34,6 +34,12 @@ const useHeroes = () => {
     heroes.value = heroes.value.filter(h => h.number !== hero.number);
   }
 
+  const addHero = (name: string) => {
+    const maxNumber = Math.max(...heroes.value.map(h => h.number));
+    const newHero = { number: maxNumber + 1, name };
+    heroes.value.push(newHero);
+  }
+
   const resetSelectedHero = () => selectedHero.value = {} as Hero;
 
   return {
@@ -44,6 +50,7 @@ const useHeroes = () => {
     findHero,
     deleteHero,
     resetSelectedHero,
+    addHero
   }
 }
 
