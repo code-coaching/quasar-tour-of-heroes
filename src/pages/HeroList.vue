@@ -46,11 +46,15 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const { heroes, selectedHero, deleteHero, resetSelectedHero } = useHeroes();
+    const {
+      heroes,
+      selectedHero,
+      deleteHero,
+      resetSelectedHero,
+      setSelectedHero,
+    } = useHeroes();
 
-    const onClickHero = (hero: Hero) => {
-      selectedHero.value = hero;
-    };
+    const onClickHero = (hero: Hero) => setSelectedHero(hero);
 
     const onDetailsClick = () => {
       void router.push({

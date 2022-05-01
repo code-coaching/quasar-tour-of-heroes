@@ -1,6 +1,6 @@
 
 import { Hero } from 'src/components/models';
-import { ref } from 'vue';
+import { readonly, ref } from 'vue';
 
 const heroes = ref([
   { number: 11, name: 'Mr. Nice' },
@@ -41,16 +41,18 @@ const useHeroes = () => {
   }
 
   const resetSelectedHero = () => selectedHero.value = {} as Hero;
+  const setSelectedHero = (hero: Hero) => selectedHero.value = hero;
 
   return {
-    heroes,
-    selectedHero,
+    heroes: readonly(heroes),
+    selectedHero: readonly(selectedHero),
     topHeroes,
     editHero,
     findHero,
     deleteHero,
     resetSelectedHero,
-    addHero
+    addHero,
+    setSelectedHero
   }
 }
 
