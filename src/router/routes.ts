@@ -5,6 +5,7 @@ export const ROUTE_NAMES = {
   HERO_LIST: 'HeroList',
   HERO_DETAILS: 'HeroDetails',
   HERO_ADD: 'HeroAdd',
+  LOGIN: 'Login',
 };
 
 const routes: RouteRecordRaw[] = [
@@ -33,6 +34,11 @@ const routes: RouteRecordRaw[] = [
         path: '/heroes/:id',
         component: () => import('pages/HeroDetails.vue'),
       },
+      {
+        name: ROUTE_NAMES.LOGIN,
+        path: '/login',
+        component: () => import('pages/Login.vue'),
+      }
     ],
   },
 
