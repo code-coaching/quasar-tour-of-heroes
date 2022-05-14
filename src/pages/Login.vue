@@ -22,7 +22,10 @@ export default defineComponent({
           email: user.email,
           password: user.password,
         })
-        .then(console.log)
+        .then((result: { data: { accessToken: string } }) => {
+          const accessToken = result.data.accessToken;
+          if (accessToken) localStorage.setItem('accessToken', accessToken);
+        })
         .catch((error) => {
           console.log(error);
           alert('Login failed');
