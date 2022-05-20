@@ -6,30 +6,21 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { api } from 'boot/axios';
+import { useAuth } from 'src/services/auth.service';
 
 export default defineComponent({
   setup() {
+    const { login: authenticate } = useAuth();
     const user = reactive({
       email: '',
       password: '',
     });
 
     const login = () => {
-      api
-        .post('/authentication', {
-          strategy: 'local',
-          email: user.email,
-          password: user.password,
-        })
-        .then((result: { data: { accessToken: string } }) => {
-          const accessToken = result.data.accessToken;
-          if (accessToken) localStorage.setItem('accessToken', accessToken);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert('Login failed');
-        });
+      authenticate(user.email, user.password).finally(() => {
+        user.email = '';
+        user.password = '';
+      });
     };
 
     return {
