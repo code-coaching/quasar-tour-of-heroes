@@ -1,10 +1,7 @@
 
 import { api } from 'src/boot/axios';
+import { User } from 'src/components/models';
 import { readonly, ref, computed } from 'vue';
-
-interface User {
-  _id: string;
-}
 
 const authenticatedUser = ref({} as User);
 
@@ -19,7 +16,6 @@ const useAuth = () => {
         strategy: 'jwt',
         accessToken
       }).then((result: { data: { accessToken: string, user: User } }) => {
-        console.log(result);
         authenticatedUser.value = result.data.user;
       }).catch(() => {
         localStorage.removeItem('accessToken');
@@ -40,7 +36,6 @@ const useAuth = () => {
         if (accessToken) {
           localStorage.setItem('accessToken', accessToken);
           authenticatedUser.value = result.data.user;
-          console.log(result.data.user);
           alert('Login successful');
         };
       })
