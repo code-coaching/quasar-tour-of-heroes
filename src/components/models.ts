@@ -1,5 +1,11 @@
+export interface BackendHero {
+  _id: string;
+  id: string;
+  name: string;
+}
 export interface Hero {
-  number: number;
+  _id?: string;
+  number: string;
   name: string;
 }
 

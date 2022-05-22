@@ -1,6 +1,8 @@
 <template>
   <div class="header">
-    <StyledButton v-if="!isAuthenticated" @click="navigate(ROUTE_NAMES.LOGIN)">Login</StyledButton>
+    <StyledButton v-if="!isAuthenticated" @click="navigate(ROUTE_NAMES.LOGIN)">
+      Login
+    </StyledButton>
     <StyledButton v-else @click="logout()">Logout</StyledButton>
   </div>
   <div class="layout-container">
@@ -24,6 +26,7 @@ import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
 import StyledButton from 'src/components/StyledButton.vue';
 import { useAuth } from 'src/services/auth.service';
+import { useHeroes } from 'src/services/hero.service';
 
 export default defineComponent({
   components: {
@@ -32,9 +35,11 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
+    const { getHeroes } = useHeroes();
 
     onBeforeMount(() => {
       tryToAuthenticate();
+      void getHeroes();
     });
 
     const navigate = (name: string) => {

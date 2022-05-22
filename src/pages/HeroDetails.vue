@@ -37,7 +37,7 @@ export default defineComponent({
     onBeforeMount(() => {
       const { id } = route.params;
       if (id) {
-        const matchingHero = findHero(+id);
+        const matchingHero = findHero(id.toString());
         if (matchingHero) hero.value = matchingHero;
       }
     });

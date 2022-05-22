@@ -1,19 +1,16 @@
 
-import { Hero } from 'src/components/models';
-import { readonly, ref } from 'vue';
+import { api } from 'src/boot/axios';
+import { BackendHero, Hero } from 'src/components/models';
+import { readonly, Ref, ref } from 'vue';
 
-const heroes = ref([
-  { number: 11, name: 'Mr. Nice' },
-  { number: 12, name: 'Narco' },
-  { number: 13, name: 'Bombasto' },
-  { number: 14, name: 'Celeritas' },
-  { number: 15, name: 'Magneta' },
-  { number: 16, name: 'RubberMan' },
-  { number: 17, name: 'Dynama' },
-  { number: 18, name: 'Dr IQ' },
-  { number: 19, name: 'Magma' },
-  { number: 20, name: 'Tornado' },
-]);
+interface Paged<T> {
+  total: number;
+  limit: number;
+  skip: number;
+  data: Array<T>;
+}
+
+const heroes: Ref<Array<Hero>> = ref([]);
 
 const selectedHero = ref({} as Hero);
 
@@ -21,24 +18,101 @@ const useHeroes = () => {
 
   const topHeroes = heroes.value.slice(0, 4);
 
-  const editHero = (hero: Hero) => {
-    heroes.value = heroes.value.map(h => h.number === hero.number ? hero : h);
+  const getHeroes = async () => {
+    const accessToken = localStorage.getItem('accessToken') || '';
+
+    const result = await api.get<Paged<BackendHero>>('/heroes', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    });
+
+    heroes.value = result.data.data.map((hero: BackendHero): Hero => {
+      return {
+        ...hero,
+        number: hero.id
+      }
+    });
   }
 
-  const findHero = (id: number): Hero | undefined => {
-    const matchingHero = heroes.value.find((h) => h.number === +id);
+  const editHero = (hero: Hero) => {
+    if (hero._id) {
+      const accessToken = localStorage.getItem('accessToken') || '';
+
+      const index = heroes.value.findIndex((h: Hero) => h._id === hero._id);
+      const oldHero = heroes.value[index];
+      heroes.value[index] = hero;
+
+      api
+        .delete(`/heroes/${hero._id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .catch(() => {
+          heroes.value[index] = oldHero;
+        });
+    }
+  }
+
+  const findHero = (id: string): Hero | undefined => {
+    const matchingHero = heroes.value.find((h) => h.number === id);
     if (matchingHero) return { ...matchingHero };
   }
 
   const deleteHero = (hero: Hero) => {
-    heroes.value = heroes.value.filter(h => h.number !== hero.number);
+    if (hero._id) {
+      const index = heroes.value.findIndex((h) => h._id === hero._id);
+      heroes.value.splice(index, 1);
+
+      const accessToken = localStorage.getItem('accessToken') || '';
+
+      api
+        .delete(`/heroes/${hero._id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .catch(() => {
+          heroes.value.splice(index, 0, hero);
+        });
+    }
   }
 
   const addHero = (name: string) => {
-    const maxNumber = Math.max(...heroes.value.map(h => h.number));
-    const newHero = { number: maxNumber + 1, name };
+    let maxNumber = Math.max(...heroes.value.map((h) => +h.number));
+    if (maxNumber === -Infinity) maxNumber = 0;
+
+    const number = (maxNumber + 1).toString();
+    const newHero = { number, name };
+
+    const accessToken = localStorage.getItem('accessToken') || '';
+
     heroes.value.push(newHero);
-  }
+    const index = heroes.value.length - 1;
+
+    api
+      .post<BackendHero>(
+        '/heroes',
+        {
+          ...newHero,
+          id: newHero.number,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((result) => {
+        heroes.value[index] = { ...result.data, number: result.data.id };
+      })
+      .catch(() => {
+        alert('Error adding hero');
+        const index = heroes.value.findIndex((e) => e === newHero);
+        heroes.value.splice(index, 1);
+      });
+  };
 
   const resetSelectedHero = () => selectedHero.value = {} as Hero;
   const setSelectedHero = (hero: Hero) => selectedHero.value = hero;
@@ -52,7 +126,8 @@ const useHeroes = () => {
     deleteHero,
     resetSelectedHero,
     addHero,
-    setSelectedHero
+    setSelectedHero,
+    getHeroes
   }
 }
 

@@ -4,7 +4,7 @@
   <div class="hero-list">
     <div
       :class="{
-        'hero--active': hero.number === selectedHero?.number,
+        'hero--active': hero._id === selectedHero?._id,
       }"
       class="hero"
       v-for="(hero, index) in heroes"
