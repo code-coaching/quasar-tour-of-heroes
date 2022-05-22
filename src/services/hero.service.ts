@@ -1,4 +1,5 @@
 
+import { AxiosRequestConfig } from 'axios';
 import { api } from 'src/boot/axios';
 import { BackendHero, Hero } from 'src/components/models';
 import { readonly, Ref, ref } from 'vue';
@@ -10,6 +11,16 @@ interface Paged<T> {
   data: Array<T>;
 }
 
+const getRequestConfig = (): AxiosRequestConfig => {
+  const accessToken = localStorage.getItem('accessToken') || '';
+
+  return {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+}
+
 const heroes: Ref<Array<Hero>> = ref([]);
 
 const selectedHero = ref({} as Hero);
@@ -19,13 +30,8 @@ const useHeroes = () => {
   const topHeroes = heroes.value.slice(0, 4);
 
   const getHeroes = async () => {
-    const accessToken = localStorage.getItem('accessToken') || '';
 
-    const result = await api.get<Paged<BackendHero>>('/heroes', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      }
-    });
+    const result = await api.get<Paged<BackendHero>>('/heroes', getRequestConfig());
 
     heroes.value = result.data.data.map((hero: BackendHero): Hero => {
       return {
@@ -37,18 +43,12 @@ const useHeroes = () => {
 
   const editHero = (hero: Hero) => {
     if (hero._id) {
-      const accessToken = localStorage.getItem('accessToken') || '';
-
       const index = heroes.value.findIndex((h: Hero) => h._id === hero._id);
       const oldHero = heroes.value[index];
       heroes.value[index] = hero;
 
       api
-        .delete(`/heroes/${hero._id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+        .delete(`/heroes/${hero._id}`, getRequestConfig())
         .catch(() => {
           heroes.value[index] = oldHero;
         });
@@ -65,14 +65,8 @@ const useHeroes = () => {
       const index = heroes.value.findIndex((h) => h._id === hero._id);
       heroes.value.splice(index, 1);
 
-      const accessToken = localStorage.getItem('accessToken') || '';
-
       api
-        .delete(`/heroes/${hero._id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+        .delete(`/heroes/${hero._id}`, getRequestConfig())
         .catch(() => {
           heroes.value.splice(index, 0, hero);
         });
@@ -86,8 +80,6 @@ const useHeroes = () => {
     const number = (maxNumber + 1).toString();
     const newHero = { number, name };
 
-    const accessToken = localStorage.getItem('accessToken') || '';
-
     heroes.value.push(newHero);
     const index = heroes.value.length - 1;
 
@@ -98,11 +90,7 @@ const useHeroes = () => {
           ...newHero,
           id: newHero.number,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        getRequestConfig()
       )
       .then((result) => {
         heroes.value[index] = { ...result.data, number: result.data.id };
