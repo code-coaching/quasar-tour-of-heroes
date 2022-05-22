@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount } from 'vue';
+import { defineComponent, onBeforeMount, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
 import StyledButton from 'src/components/StyledButton.vue';
@@ -36,6 +36,14 @@ export default defineComponent({
     const router = useRouter();
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
     const { getHeroes } = useHeroes();
+
+    watch(isAuthenticated, (newValue) => {
+      if (newValue) {
+        void getHeroes();
+      } else {
+        void router.push({ name: ROUTE_NAMES.LOGIN });
+      }
+    });
 
     onBeforeMount(() => {
       tryToAuthenticate()

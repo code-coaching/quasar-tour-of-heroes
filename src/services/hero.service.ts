@@ -2,7 +2,7 @@
 import { AxiosRequestConfig } from 'axios';
 import { api } from 'src/boot/axios';
 import { BackendHero, Hero } from 'src/components/models';
-import { readonly, Ref, ref } from 'vue';
+import { readonly, Ref, ref, computed } from 'vue';
 
 interface Paged<T> {
   total: number;
@@ -27,7 +27,7 @@ const selectedHero = ref({} as Hero);
 
 const useHeroes = () => {
 
-  const topHeroes = heroes.value.slice(0, 4);
+  const topHeroes = computed(() => heroes.value.slice(0, 4));
 
   const getHeroes = async () => {
 

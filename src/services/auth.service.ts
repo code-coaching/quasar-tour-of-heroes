@@ -31,24 +31,30 @@ const useAuth = () => {
   }
 
   const login = (email: string, password: string): Promise<void> => {
-    return api
-      .post('/authentication', {
-        strategy: 'local',
-        email,
-        password,
-      })
-      .then((result: { data: { accessToken: string, user: User } }) => {
-        const accessToken = result.data.accessToken;
-        if (accessToken) {
-          localStorage.setItem('accessToken', accessToken);
-          authenticatedUser.value = result.data.user;
-          alert('Login successful');
-        };
-      })
-      .catch((error) => {
-        console.log(error);
-        alert('Login failed');
-      });
+    return new Promise((resolve, reject) => {
+      api
+        .post('/authentication', {
+          strategy: 'local',
+          email,
+          password,
+        })
+        .then((result: { data: { accessToken: string, user: User } }) => {
+          const accessToken = result.data.accessToken;
+          if (accessToken) {
+            localStorage.setItem('accessToken', accessToken);
+            authenticatedUser.value = result.data.user;
+            resolve();
+          } else {
+            alert('Login failed');
+            reject();
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('Login failed');
+          reject();
+        });
+    })
   }
 
   const logout = () => {

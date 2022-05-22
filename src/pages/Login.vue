@@ -12,21 +12,30 @@
 import { defineComponent, reactive } from 'vue';
 import { useAuth } from 'src/services/auth.service';
 import StyledButton from 'src/components/StyledButton.vue';
+import { useRouter } from 'vue-router';
+import { ROUTE_NAMES } from 'src/router/routes';
 
 export default defineComponent({
   components: { StyledButton },
   setup() {
+    const router = useRouter();
     const { login: authenticate } = useAuth();
     const user = reactive({
       email: '',
       password: '',
     });
+
     const login = () => {
-      authenticate(user.email, user.password).finally(() => {
-        user.email = '';
-        user.password = '';
-      });
+      authenticate(user.email, user.password)
+        .then(() => {
+          void router.push({ name: ROUTE_NAMES.DASHBOARD });
+        })
+        .finally(() => {
+          user.email = '';
+          user.password = '';
+        });
     };
+    
     return {
       login,
       user,
