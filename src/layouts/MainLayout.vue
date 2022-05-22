@@ -38,8 +38,13 @@ export default defineComponent({
     const { getHeroes } = useHeroes();
 
     onBeforeMount(() => {
-      tryToAuthenticate();
-      void getHeroes();
+      tryToAuthenticate()
+        .then(() => {
+          void getHeroes();
+        })
+        .catch(() => {
+          void router.push({ name: ROUTE_NAMES.LOGIN });
+        });
     });
 
     const navigate = (name: string) => {

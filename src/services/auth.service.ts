@@ -9,19 +9,25 @@ const useAuth = () => {
 
   const isAuthenticated = computed(() => authenticatedUser.value._id !== undefined);
 
-  const tryToAuthenticate = () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      api.post('/authentication', {
-        strategy: 'jwt',
-        accessToken
-      }).then((result: { data: { accessToken: string, user: User } }) => {
-        authenticatedUser.value = result.data.user;
-      }).catch(() => {
-        localStorage.removeItem('accessToken');
-        authenticatedUser.value = {} as User;
-      })
-    }
+  const tryToAuthenticate = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        api.post('/authentication', {
+          strategy: 'jwt',
+          accessToken
+        }).then((result: { data: { accessToken: string, user: User } }) => {
+          authenticatedUser.value = result.data.user;
+          resolve();
+        }).catch(() => {
+          localStorage.removeItem('accessToken');
+          authenticatedUser.value = {} as User;
+          reject();
+        })
+      } else {
+        reject();
+      }
+    });
   }
 
   const login = (email: string, password: string): Promise<void> => {
