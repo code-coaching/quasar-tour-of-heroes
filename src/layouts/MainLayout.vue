@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
 import StyledButton from 'src/components/StyledButton.vue';
 import { useAuth } from 'src/services/auth.service';
@@ -34,6 +34,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
     const { getHeroes } = useHeroes();
 
@@ -45,15 +46,23 @@ export default defineComponent({
       }
     });
 
-    onBeforeMount(() => {
-      tryToAuthenticate()
-        .then(() => {
-          void getHeroes();
-        })
-        .catch(() => {
-          void router.push({ name: ROUTE_NAMES.LOGIN });
-        });
-    });
+    watch(
+      () => route.path,
+      (newValue) => {
+        if (newValue !== ROUTE_NAMES.LOGIN) {
+          if (!isAuthenticated.value) {
+            tryToAuthenticate()
+              .then(() => {
+                void getHeroes();
+              })
+              .catch(() => {
+                void router.push({ name: ROUTE_NAMES.LOGIN });
+              });
+          }
+        }
+      },
+      { immediate: true }
+    );
 
     const navigate = (name: string) => {
       // void router.push({ name: 'Dashboard' }); Navigate to Dashboard
