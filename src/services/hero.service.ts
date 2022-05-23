@@ -48,7 +48,7 @@ const useHeroes = () => {
       heroes.value[index] = hero;
 
       api
-        .delete(`/heroes/${hero._id}`, getRequestConfig())
+        .patch(`/heroes/${hero._id}`, hero, getRequestConfig())
         .catch(() => {
           heroes.value[index] = oldHero;
         });
