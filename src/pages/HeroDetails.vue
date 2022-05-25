@@ -1,9 +1,9 @@
 <template>
-  <div v-if="hero">
+  <div v-if="hero" class="details-container">
     <div class="title">{{ hero.name }} details!</div>
 
     <div>id: {{ hero.number }}</div>
-    <div>name: <input v-model="hero.name" /></div>
+    <div><q-input outlined dense label="name" v-model="hero.name" /></div>
 
     <ButtonGroup class="button-group">
       <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
@@ -63,6 +63,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.details-container {
+  width: 20rem;
+}
+
 .title {
   margin-top: 1rem;
   margin-bottom: 1rem;

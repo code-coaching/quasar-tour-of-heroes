@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-fields">
-      <input type="email" v-model="user.email" />
-      <input type="password" v-model="user.password" />
+      <q-input outlined dense label="email" type="email" v-model="user.email" />
+      <q-input outlined dense label="password" type="password" v-model="user.password" />
     </div>
     <StyledButton @click="login()">Login</StyledButton>
   </div>
@@ -35,7 +35,7 @@ export default defineComponent({
           user.password = '';
         });
     };
-    
+
     return {
       login,
       user,

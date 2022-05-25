@@ -1,12 +1,14 @@
 <template>
-  <div class="title">Add hero</div>
+  <div class="add-container">
+    <div class="title">Add hero</div>
 
-  <div>name: <input v-model="name" /></div>
+    <div><q-input outlined dense label="name" v-model="name" /></div>
 
-  <ButtonGroup class="button-group">
-    <StyledButton @click="moveBack()">Back</StyledButton>
-    <StyledButton primary @click="saveHero()">Save</StyledButton>
-  </ButtonGroup>
+    <ButtonGroup class="button-group">
+      <StyledButton @click="moveBack()">Back</StyledButton>
+      <StyledButton primary @click="saveHero()">Save</StyledButton>
+    </ButtonGroup>
+  </div>
 </template>
 
 <script lang="ts">
@@ -42,6 +44,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.add-container {
+  width: 20rem;
+}
+
 .title {
   margin-top: 1rem;
   margin-bottom: 1rem;
