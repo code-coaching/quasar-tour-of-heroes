@@ -1,19 +1,36 @@
 <template>
   <div class="login-container">
-    <div class="login-fields">
-      <q-input outlined dense label="email" type="email" v-model="user.email" />
-      <q-input outlined dense label="password" type="password" v-model="user.password" />
-    </div>
+    <q-form class="login-fields" ref="formRef" greedy>
+      <q-input
+        outlined
+        dense
+        label="email"
+        type="email"
+        v-model="user.email"
+        :rules="emailRules"
+        lazy-rules
+      />
+      <q-input
+        outlined
+        dense
+        label="password"
+        type="password"
+        v-model="user.password"
+        :rules="passwordRules"
+        lazy-rules
+      />
+    </q-form>
     <StyledButton @click="login()">Login</StyledButton>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { useAuth } from 'src/services/auth.service';
 import StyledButton from 'src/components/StyledButton.vue';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from 'src/router/routes';
+import { QForm } from 'quasar';
 
 export default defineComponent({
   components: { StyledButton },
@@ -26,19 +43,47 @@ export default defineComponent({
     });
 
     const login = () => {
-      authenticate(user.email, user.password)
-        .then(() => {
-          void router.push({ name: ROUTE_NAMES.DASHBOARD });
-        })
-        .finally(() => {
-          user.email = '';
-          user.password = '';
-        });
+      void formRef.value.validate().then((valid) => {
+        if (valid) {
+          authenticate(user.email, user.password)
+            .then(() => {
+              void router.push({ name: ROUTE_NAMES.DASHBOARD });
+            })
+            .finally(() => {
+              user.email = '';
+              user.password = '';
+            });
+        }
+      });
     };
+
+    const formRef = ref({} as QForm);
+
+    const required =
+      (s?: string) =>
+      (v: string): boolean | string =>
+        !!v || (s ? `${s} is required` : 'Required');
+
+    const emailFormat =
+      () =>
+      (v: string): boolean | string =>
+        /.+@.+\..+/.test(v) || 'Invalid email format';
+
+    const minCharacters =
+      (n: number) =>
+      (v: string): boolean | string =>
+        v.length >= n || `Must be at least ${n} characters`;
+
+    const emailRules = [required('Email'), emailFormat()];
+    const passwordRules = [required('Password'), minCharacters(8)];
 
     return {
       login,
       user,
+
+      formRef,
+      emailRules,
+      passwordRules,
     };
   },
 });
