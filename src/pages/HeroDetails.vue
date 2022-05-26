@@ -1,16 +1,23 @@
 <template>
-  <div v-if="hero" class="details-container">
+  <q-form v-if="hero" class="details-container" ref="formRef" greedy>
     <div class="title">{{ hero.name }} details!</div>
 
     <div>id: {{ hero.number }}</div>
-    <div><q-input outlined dense label="name" v-model="hero.name" /></div>
+    <q-input
+      outlined
+      dense
+      label="name"
+      v-model="hero.name"
+      :rules="[required()]"
+      lazy-rules
+    />
 
     <ButtonGroup class="button-group">
       <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
       <StyledButton primary @click="saveHero()">Save</StyledButton>
       <StyledButton negative @click="removeHero()">Delete</StyledButton>
     </ButtonGroup>
-  </div>
+  </q-form>
 
   <div v-else class="title">Hero not found!</div>
 </template>
@@ -22,6 +29,8 @@ import ButtonGroup from 'components/ButtonGroup.vue';
 import { Hero } from 'components/models';
 import { useRoute, useRouter } from 'vue-router';
 import { useHeroes } from 'src/services/hero.service';
+import { useValidators } from 'src/services/validator.composable';
+import { QForm } from 'quasar';
 
 export default defineComponent({
   components: {
@@ -33,6 +42,7 @@ export default defineComponent({
     const router = useRouter();
     const hero: Ref<Hero> = ref() as Ref<Hero>;
     const { editHero, findHero, deleteHero } = useHeroes();
+    const { required } = useValidators();
 
     onBeforeMount(() => {
       const { id } = route.params;
@@ -44,19 +54,27 @@ export default defineComponent({
 
     const moveBack = () => void router.go(-1);
     const saveHero = () => {
-      editHero(hero.value);
-      moveBack();
+      void formRef.value.validate().then((valid) => {
+        if (valid) {
+          editHero(hero.value);
+          moveBack();
+        }
+      });
     };
     const removeHero = () => {
       deleteHero(hero.value);
       moveBack();
     };
 
+    const formRef = ref({} as QForm);
+
     return {
       hero,
       moveBack,
       saveHero,
       removeHero,
+      required,
+      formRef,
     };
   },
 });

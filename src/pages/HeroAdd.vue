@@ -1,14 +1,21 @@
 <template>
-  <div class="add-container">
+  <q-form class="add-container" ref="formRef" greedy>
     <div class="title">Add hero</div>
 
-    <div><q-input outlined dense label="name" v-model="name" /></div>
+    <q-input
+      outlined
+      dense
+      label="name"
+      v-model="name"
+      :rules="[required()]"
+      lazy-rules
+    />
 
     <ButtonGroup class="button-group">
       <StyledButton @click="moveBack()">Back</StyledButton>
       <StyledButton primary @click="saveHero()">Save</StyledButton>
     </ButtonGroup>
-  </div>
+  </q-form>
 </template>
 
 <script lang="ts">
@@ -17,6 +24,8 @@ import StyledButton from 'components/StyledButton.vue';
 import ButtonGroup from 'components/ButtonGroup.vue';
 import { useRouter } from 'vue-router';
 import { useHeroes } from 'src/services/hero.service';
+import { useValidators } from 'src/services/validator.composable';
+import { QForm } from 'quasar';
 
 export default defineComponent({
   components: {
@@ -27,17 +36,26 @@ export default defineComponent({
     const router = useRouter();
     const name = ref('');
     const { addHero } = useHeroes();
+    const { required } = useValidators();
 
     const moveBack = () => void router.go(-1);
     const saveHero = () => {
-      addHero(name.value);
-      moveBack();
+      void formRef.value.validate().then((valid) => {
+        if (valid) {
+          addHero(name.value);
+          moveBack();
+        }
+      });
     };
+
+    const formRef = ref({} as QForm);
 
     return {
       name,
       moveBack,
       saveHero,
+      required,
+      formRef,
     };
   },
 });

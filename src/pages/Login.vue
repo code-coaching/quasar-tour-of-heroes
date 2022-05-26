@@ -31,12 +31,14 @@ import StyledButton from 'src/components/StyledButton.vue';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { QForm } from 'quasar';
+import { useValidators } from 'src/services/validator.composable';
 
 export default defineComponent({
   components: { StyledButton },
   setup() {
     const router = useRouter();
     const { login: authenticate } = useAuth();
+    const { emailRules, passwordRules } = useValidators();
     const user = reactive({
       email: '',
       password: '',
@@ -58,24 +60,6 @@ export default defineComponent({
     };
 
     const formRef = ref({} as QForm);
-
-    const required =
-      (s?: string) =>
-      (v: string): boolean | string =>
-        !!v || (s ? `${s} is required` : 'Required');
-
-    const emailFormat =
-      () =>
-      (v: string): boolean | string =>
-        /.+@.+\..+/.test(v) || 'Invalid email format';
-
-    const minCharacters =
-      (n: number) =>
-      (v: string): boolean | string =>
-        v.length >= n || `Must be at least ${n} characters`;
-
-    const emailRules = [required('Email'), emailFormat()];
-    const passwordRules = [required('Password'), minCharacters(8)];
 
     return {
       login,
