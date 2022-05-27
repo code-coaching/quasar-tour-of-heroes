@@ -2,7 +2,7 @@
   <div class="title">My Heroes</div>
 
   <div class="hero-list">
-    <div
+    <q-btn
       :class="{
         'hero--active': hero._id === selectedHero?._id,
       }"
@@ -13,7 +13,7 @@
     >
       <span class="hero-number">{{ hero.number }}</span>
       <span class="hero-name">{{ hero.name }}</span>
-    </div>
+    </q-btn>
   </div>
 
   <StyledButton class="new-hero-button" primary @click="onNewClick()">
@@ -104,6 +104,8 @@ export default defineComponent({
   cursor: pointer;
   color: #8d8d8d;
   border-radius: 0.5rem;
+  padding: 0;
+  align-items: flex-start;
 
   &:hover {
     background-color: #cfd8dc;

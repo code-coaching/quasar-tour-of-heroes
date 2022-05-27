@@ -1,12 +1,12 @@
 <template>
-  <button
+  <q-btn
     :class="{
       primary: primary,
       negative: negative,
     }"
   >
     <slot />
-  </button>
+  </q-btn>
 </template>
 
 <script lang="ts">
