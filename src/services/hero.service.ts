@@ -1,8 +1,8 @@
-
 import { AxiosRequestConfig } from 'axios';
 import { api } from 'src/boot/axios';
 import { BackendHero, Hero } from 'src/components/models';
 import { readonly, Ref, ref, computed } from 'vue';
+import { Notify } from 'quasar';
 
 interface Paged<T> {
   total: number;
@@ -19,27 +19,28 @@ const getRequestConfig = (): AxiosRequestConfig => {
       Authorization: `Bearer ${accessToken}`,
     },
   };
-}
+};
 
 const heroes: Ref<Array<Hero>> = ref([]);
 
 const selectedHero = ref({} as Hero);
 
 const useHeroes = () => {
-
   const topHeroes = computed(() => heroes.value.slice(0, 4));
 
   const getHeroes = async () => {
-
-    const result = await api.get<Paged<BackendHero>>('/heroes', getRequestConfig());
+    const result = await api.get<Paged<BackendHero>>(
+      '/heroes',
+      getRequestConfig()
+    );
 
     heroes.value = result.data.data.map((hero: BackendHero): Hero => {
       return {
         ...hero,
-        number: hero.id
-      }
+        number: hero.id,
+      };
     });
-  }
+  };
 
   const editHero = (hero: Hero) => {
     if (hero._id) {
@@ -49,16 +50,20 @@ const useHeroes = () => {
 
       api
         .patch(`/heroes/${hero._id}`, hero, getRequestConfig())
+        .then(() =>
+          Notify.create({ message: 'Hero updated', color: 'positive' })
+        )
         .catch(() => {
+          Notify.create({ message: 'Hero update failed', color: 'negative' });
           heroes.value[index] = oldHero;
         });
     }
-  }
+  };
 
   const findHero = (id: string): Hero | undefined => {
     const matchingHero = heroes.value.find((h) => h.number === id);
     if (matchingHero) return { ...matchingHero };
-  }
+  };
 
   const deleteHero = (hero: Hero) => {
     if (hero._id) {
@@ -67,11 +72,18 @@ const useHeroes = () => {
 
       api
         .delete(`/heroes/${hero._id}`, getRequestConfig())
+        .then(() =>
+          Notify.create({ message: 'Hero deleted', color: 'positive' })
+        )
         .catch(() => {
+          Notify.create({
+            message: 'Failed to delete hero',
+            color: 'negative',
+          });
           heroes.value.splice(index, 0, hero);
         });
     }
-  }
+  };
 
   const addHero = (name: string) => {
     let maxNumber = Math.max(...heroes.value.map((h) => +h.number));
@@ -93,17 +105,18 @@ const useHeroes = () => {
         getRequestConfig()
       )
       .then((result) => {
+        Notify.create({ message: 'Hero added', type: 'positive' });
         heroes.value[index] = { ...result.data, number: result.data.id };
       })
       .catch(() => {
-        alert('Error adding hero');
+        Notify.create({ message: 'Error adding hero', type: 'negative' });
         const index = heroes.value.findIndex((e) => e === newHero);
         heroes.value.splice(index, 1);
       });
   };
 
-  const resetSelectedHero = () => selectedHero.value = {} as Hero;
-  const setSelectedHero = (hero: Hero) => selectedHero.value = hero;
+  const resetSelectedHero = () => (selectedHero.value = {} as Hero);
+  const setSelectedHero = (hero: Hero) => (selectedHero.value = hero);
 
   return {
     heroes: readonly(heroes),
@@ -115,10 +128,8 @@ const useHeroes = () => {
     resetSelectedHero,
     addHero,
     setSelectedHero,
-    getHeroes
-  }
-}
+    getHeroes,
+  };
+};
 
-export {
-  useHeroes
-}
+export { useHeroes };
