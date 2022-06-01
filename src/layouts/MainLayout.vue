@@ -48,16 +48,20 @@ export default defineComponent({
 
     watch(
       () => route.path,
-      (newValue) => {
-        if (newValue !== ROUTE_NAMES.LOGIN) {
-          if (!isAuthenticated.value) {
-            tryToAuthenticate()
-              .then(() => {
-                void getHeroes();
-              })
-              .catch(() => {
-                void router.push({ name: ROUTE_NAMES.LOGIN });
-              });
+      () => {
+        const routesWithoutAuth = [ROUTE_NAMES.LOGIN, ROUTE_NAMES.EXAMPLE];
+
+        if (route.name) {
+          if (!routesWithoutAuth.includes(route.name.toString())) {
+            if (!isAuthenticated.value) {
+              tryToAuthenticate()
+                .then(() => {
+                  void getHeroes();
+                })
+                .catch(() => {
+                  void router.push({ name: ROUTE_NAMES.LOGIN });
+                });
+            }
           }
         }
       },
