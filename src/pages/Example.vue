@@ -36,17 +36,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useQuasar } from 'quasar';
 import StyledButton from 'components/StyledButton.vue';
+import { useTheme } from 'src/services/theme/theme.service';
 
 export default defineComponent({
   components: {
     StyledButton,
   },
   setup() {
-    const $q = useQuasar();
-
-    const toggleDarkMode = () => $q.dark.set($q.dark.isActive ? false : true);
+    const { toggleDarkMode } = useTheme();
 
     const quasarColors = [
       'primary',
