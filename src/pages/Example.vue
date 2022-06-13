@@ -20,7 +20,12 @@
     <div v-for="option in quasarInputOptions" :key="option">
       <div class="option">{{ option }}</div>
       <div class="elements">
-        <q-input outlined placeholder="outlined" v-bind:[option]="true">
+        <q-input
+          outlined
+          placeholder="outlined"
+          v-bind:[option]="true"
+          v-model="inputModel"
+        >
           Default
         </q-input>
         <q-input
@@ -29,6 +34,7 @@
           :key="color"
           :color="color"
           :placeholder="option"
+          v-model="inputModel"
         >
           {{ color ? color : 'default' }}
         </q-input>
@@ -38,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
 import DarkToggle from 'src/services/theme/DarkToggle.vue';
 import { useTheme } from 'src/services/theme/theme.service';
@@ -81,6 +87,7 @@ export default defineComponent({
       quasarColors,
       quasarInputOptions,
       styledButtonOptions,
+      inputModel: ref(''),
     };
   },
 });
