@@ -5,7 +5,25 @@
       <StyledButton @click="toggleDarkMode()">Toggle Dark Mode</StyledButton>
     </div>
 
+    <div class="section">Theming</div>
+
+    <div class="component">Quasar Variables</div>
+
+    <div class="colors">
+      <div
+        v-for="color in quasarColors"
+        :key="color"
+        class="color"
+        :class="`bg-${color}`"
+      >
+        {{ color }}
+      </div>
+    </div>
+
+    <div class="section">Components</div>
+
     <div class="component">StyledButton</div>
+
     <div class="elements">
       <StyledButton>Default</StyledButton>
     </div>
@@ -93,9 +111,31 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .example-page {
   margin: 1rem;
+}
+
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.color {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  min-width: 9rem;
+  color: #fff;
+}
+
+.section {
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  font-weight: bold;
 }
 
 .component {
