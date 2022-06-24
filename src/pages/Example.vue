@@ -3,6 +3,7 @@
     <div class="top-row">
       <DarkToggle />
       <StyledButton @click="toggleDarkMode()">Toggle Dark Mode</StyledButton>
+      <ThemeToggle />
     </div>
 
     <div class="section">Theming</div>
@@ -66,11 +67,13 @@ import { defineComponent, ref } from 'vue';
 import StyledButton from 'components/StyledButton.vue';
 import DarkToggle from 'src/services/theme/DarkToggle.vue';
 import { useTheme } from 'src/services/theme/theme.service';
+import ThemeToggle from 'src/services/theme/ThemeToggle.vue';
 
 export default defineComponent({
   components: {
     StyledButton,
     DarkToggle,
+    ThemeToggle,
   },
   setup() {
     const { toggleDarkMode } = useTheme();
@@ -157,6 +160,7 @@ export default defineComponent({
 
 .top-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 </style>
