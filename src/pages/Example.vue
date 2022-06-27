@@ -31,7 +31,7 @@
     <div v-for="option in styledButtonOptions" :key="option">
       <div class="option">{{ option }}</div>
       <div class="elements">
-        <StyledButton v-bind:[option]="true">{{ option }}</StyledButton>
+        <StyledButton :color="option">{{ option }}</StyledButton>
       </div>
     </div>
 
