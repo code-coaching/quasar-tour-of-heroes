@@ -1,7 +1,7 @@
 <template>
   <div class="title">My Heroes</div>
 
-  <div class="hero-list">
+  <FlexWrap v-bind="getDefaults('FlexWrap')" column>
     <q-btn
       :class="{
         'hero--active': hero._id === selectedHero?._id,
@@ -14,18 +14,30 @@
       <span class="hero-number">{{ hero.number }}</span>
       <span class="hero-name">{{ hero.name }}</span>
     </q-btn>
-  </div>
+  </FlexWrap>
 
-  <StyledButton class="new-hero-button" primary @click="onNewClick()">
+  <q-btn
+    v-bind="getDefaults('QBtn')"
+    class="new-hero-button"
+    @click="onNewClick()"
+  >
     New Hero
-  </StyledButton>
+  </q-btn>
 
   <div v-if="selectedHero?.name">
     <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
-    <ButtonGroup>
-      <StyledButton @click="onDetailsClick()">Details</StyledButton>
-      <StyledButton negative @click="onDeleteClick()">Delete</StyledButton>
-    </ButtonGroup>
+    <FlexWrap v-bind="getDefaults('FlexWrap')">
+      <q-btn v-bind="getDefaults('QBtn')" @click="onDetailsClick()">
+        Details
+      </q-btn>
+      <q-btn
+        v-bind="getDefaults('QBtn')"
+        color="negative"
+        @click="onDeleteClick()"
+      >
+        Delete
+      </q-btn>
+    </FlexWrap>
   </div>
 </template>
 
@@ -33,16 +45,15 @@
 import { defineComponent } from 'vue';
 import { upperCase } from 'components/utils';
 import { useRouter } from 'vue-router';
-import StyledButton from 'components/StyledButton.vue';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { Hero } from 'components/models';
 import { useHeroes } from 'src/services/hero.service';
-import ButtonGroup from 'src/components/ButtonGroup.vue';
+import FlexWrap from 'src/components/FlexWrap.vue';
+import { useTheme } from 'src/services/theme/theme.service';
 
 export default defineComponent({
   components: {
-    StyledButton,
-    ButtonGroup,
+    FlexWrap,
   },
   setup() {
     const router = useRouter();
@@ -53,6 +64,7 @@ export default defineComponent({
       resetSelectedHero,
       setSelectedHero,
     } = useHeroes();
+    const { getDefaults } = useTheme();
 
     const onClickHero = (hero: Hero) => setSelectedHero(hero);
 
@@ -73,6 +85,7 @@ export default defineComponent({
     const onNewClick = () => void router.push({ name: ROUTE_NAMES.HERO_ADD });
 
     return {
+      getDefaults,
       heroes,
       selectedHero,
       onClickHero,
@@ -91,15 +104,9 @@ export default defineComponent({
   margin-bottom: 1rem;
 }
 
-.hero-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
 .hero {
   display: flex;
   max-width: 10rem;
-  background-color: darken(#eeeeee, 10%);
   background-color: #eeeeee;
   cursor: pointer;
   color: #8d8d8d;

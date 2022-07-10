@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 
 export const ROUTE_NAMES = {
+  HOME: 'Dashboard',
   DASHBOARD: 'Dashboard',
   HERO_LIST: 'HeroList',
   HERO_DETAILS: 'HeroDetails',

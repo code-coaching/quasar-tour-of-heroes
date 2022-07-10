@@ -1,9 +1,8 @@
 <template>
-  <div class="login-container">
+  <FlexWrap column class="login-container">
     <q-form class="login-fields" ref="formRef" greedy>
       <q-input
-        outlined
-        dense
+        v-bind="getDefaults('QInput')"
         label="email"
         type="email"
         v-model="user.email"
@@ -11,8 +10,7 @@
         lazy-rules
       />
       <q-input
-        outlined
-        dense
+        v-bind="getDefaults('QInput')"
         label="password"
         type="password"
         v-model="user.password"
@@ -20,21 +18,26 @@
         lazy-rules
       />
     </q-form>
-    <StyledButton @click="login()">Login</StyledButton>
-  </div>
+    <q-btn v-bind="getDefaults('QBtn')" color="primary" @click="login()">
+      Login
+    </q-btn>
+  </FlexWrap>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import { useAuth } from 'src/services/auth.service';
-import StyledButton from 'src/components/StyledButton.vue';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { QForm } from 'quasar';
 import { useValidators } from 'src/services/validator.composable';
+import { useTheme } from 'src/services/theme/theme.service';
+import FlexWrap from 'src/components/FlexWrap.vue';
 
 export default defineComponent({
-  components: { StyledButton },
+  components: {
+    FlexWrap,
+  },
   setup() {
     const router = useRouter();
     const { login: authenticate } = useAuth();
@@ -43,6 +46,7 @@ export default defineComponent({
       email: '',
       password: '',
     });
+    const { getDefaults } = useTheme();
 
     const login = () => {
       void formRef.value.validate().then((valid) => {
@@ -62,6 +66,7 @@ export default defineComponent({
     const formRef = ref({} as QForm);
 
     return {
+      getDefaults,
       login,
       user,
 
@@ -76,9 +81,6 @@ export default defineComponent({
 <style lang="scss">
 .login-container {
   margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   max-width: 20rem;
 }
 

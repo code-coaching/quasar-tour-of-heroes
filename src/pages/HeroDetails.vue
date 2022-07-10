@@ -4,19 +4,32 @@
 
     <div>id: {{ hero.number }}</div>
     <q-input
-      outlined
-      dense
+      v-bind="getDefaults('QInput')"
       label="name"
       v-model="hero.name"
       :rules="[required()]"
       lazy-rules
     />
 
-    <ButtonGroup class="button-group">
-      <StyledButton class="back-button" @click="moveBack()">Back</StyledButton>
-      <StyledButton primary @click="saveHero()">Save</StyledButton>
-      <StyledButton negative @click="removeHero()">Delete</StyledButton>
-    </ButtonGroup>
+    <FlexWrap v-bind="getDefaults('FlexWrap')" class="button-group">
+      <q-btn
+        v-bind="getDefaults('QBtn')"
+        class="back-button"
+        @click="moveBack()"
+      >
+        Back
+      </q-btn>
+      <q-btn v-bind="getDefaults('QBtn')" color="primary" @click="saveHero()">
+        Save
+      </q-btn>
+      <q-btn
+        v-bind="getDefaults('QBtn')"
+        color="negative"
+        @click="removeHero()"
+      >
+        Delete
+      </q-btn>
+    </FlexWrap>
   </q-form>
 
   <div v-else class="title">Hero not found!</div>
@@ -24,18 +37,17 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, Ref } from 'vue';
-import StyledButton from 'components/StyledButton.vue';
-import ButtonGroup from 'components/ButtonGroup.vue';
+import FlexWrap from 'components/FlexWrap.vue';
 import { Hero } from 'components/models';
 import { useRoute, useRouter } from 'vue-router';
 import { useHeroes } from 'src/services/hero.service';
 import { useValidators } from 'src/services/validator.composable';
 import { QForm } from 'quasar';
+import { useTheme } from 'src/services/theme/theme.service';
 
 export default defineComponent({
   components: {
-    StyledButton,
-    ButtonGroup,
+    FlexWrap,
   },
   setup() {
     const route = useRoute();
@@ -43,6 +55,7 @@ export default defineComponent({
     const hero: Ref<Hero> = ref() as Ref<Hero>;
     const { editHero, findHero, deleteHero } = useHeroes();
     const { required } = useValidators();
+    const { getDefaults } = useTheme();
 
     onBeforeMount(() => {
       const { id } = route.params;
@@ -69,6 +82,7 @@ export default defineComponent({
     const formRef = ref({} as QForm);
 
     return {
+      getDefaults,
       hero,
       moveBack,
       saveHero,

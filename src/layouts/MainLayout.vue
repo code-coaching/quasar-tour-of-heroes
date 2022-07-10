@@ -1,20 +1,46 @@
 <template>
   <div class="header">
-    <StyledButton v-if="!isAuthenticated" @click="navigate(ROUTE_NAMES.LOGIN)">
+    <DarkToggle force-light />
+    <q-btn
+      round
+      outline
+      class="text-white"
+      icon="settings"
+      @click="navigate(ROUTE_NAMES.EXAMPLE)"
+    />
+    <q-btn
+      v-bind="getDefaults('QBtn')"
+      color="primary"
+      v-if="!isAuthenticated"
+      @click="navigate(ROUTE_NAMES.LOGIN)"
+    >
       Login
-    </StyledButton>
-    <StyledButton v-else @click="logout()">Logout</StyledButton>
+    </q-btn>
+    <q-btn
+      v-bind="getDefaults('QBtn')"
+      color="primary"
+      v-else
+      @click="logout()"
+    >
+      Logout
+    </q-btn>
   </div>
   <div class="layout-container">
     <div class="title">Tour of Heroes</div>
-    <div class="button-container">
-      <StyledButton @click="navigate(ROUTE_NAMES.DASHBOARD)">
+    <FlexWrap v-bind="getDefaults('FlexWrap')">
+      <q-btn
+        v-bind="getDefaults('QBtn')"
+        @click="navigate(ROUTE_NAMES.DASHBOARD)"
+      >
         Dashboard
-      </StyledButton>
-      <StyledButton @click="navigate(ROUTE_NAMES.HERO_LIST)">
+      </q-btn>
+      <q-btn
+        v-bind="getDefaults('QBtn')"
+        @click="navigate(ROUTE_NAMES.HERO_LIST)"
+      >
         Heroes
-      </StyledButton>
-    </div>
+      </q-btn>
+    </FlexWrap>
 
     <router-view></router-view>
   </div>
@@ -24,19 +50,24 @@
 import { defineComponent, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
-import StyledButton from 'src/components/StyledButton.vue';
 import { useAuth } from 'src/services/auth.service';
 import { useHeroes } from 'src/services/hero.service';
+import { useTheme } from 'src/services/theme/theme.service';
+import DarkToggle from '../services/theme/DarkToggle.vue';
+import FlexWrap from 'src/components/FlexWrap.vue';
 
 export default defineComponent({
   components: {
-    StyledButton,
+    DarkToggle,
+    FlexWrap,
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
     const { getHeroes } = useHeroes();
+    const { loadCustomTheme, getDefaults } = useTheme();
+    loadCustomTheme();
 
     watch(isAuthenticated, (newValue) => {
       if (newValue) {
@@ -75,6 +106,7 @@ export default defineComponent({
     };
 
     return {
+      getDefaults,
       navigate,
       ROUTE_NAMES,
       isAuthenticated,
@@ -89,15 +121,11 @@ export default defineComponent({
   margin: 2rem;
 }
 
-.button-container {
-  display: flex;
-  gap: 0.25rem;
-}
-
 .header {
   display: flex;
   justify-content: flex-end;
   padding: 0.5rem;
   background-color: #333;
+  gap: 0.5rem;
 }
 </style>

@@ -1,17 +1,13 @@
 <template>
-  <div
-    class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
-  >
+  <div class="fullscreen text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">404</div>
 
       <div class="text-h2" style="opacity: 0.4">Oops. Nothing here...</div>
 
       <q-btn
+        v-bind="getDefaults('QBtn')"
         class="q-mt-xl"
-        color="white"
-        text-color="blue"
-        unelevated
         to="/"
         label="Go Home"
         no-caps
@@ -21,9 +17,16 @@
 </template>
 
 <script lang="ts">
+import { useTheme } from 'src/services/theme/theme.service';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Error404',
+  setup() {
+    const { getDefaults } = useTheme();
+    return {
+      getDefaults,
+    };
+  },
 });
 </script>

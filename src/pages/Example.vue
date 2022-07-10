@@ -1,82 +1,135 @@
 <template>
   <div class="example-page">
-    <div class="top-row">
+    <FlexWrap v-bind="getDefaults('FlexWrap')">
+      <q-btn round outline icon="home" @click="navigate(ROUTE_NAMES.HOME)" />
       <DarkToggle />
-      <StyledButton @click="toggleDarkMode()">Toggle Dark Mode</StyledButton>
+      <q-btn @click="toggleDarkMode()">Toggle Dark Mode</q-btn>
       <ThemeToggle />
-    </div>
+    </FlexWrap>
 
     <div class="section">Theming</div>
 
     <div class="component">Quasar Variables</div>
 
-    <div class="colors">
-      <div
-        v-for="color in quasarColors"
-        :key="color"
-        class="color"
-        :class="`bg-${color}`"
+    <div class="component">Component Defaults</div>
+    <FlexWrap v-bind="getDefaults('FlexWrap')" class="elements">
+      <q-checkbox v-bind="getDefaults('QCheckbox')" v-model="syncProps">
+        Synchronize Props
+      </q-checkbox>
+      <FlexWrap
+        v-bind="getDefaults('FlexWrap')"
+        column
+        class="options"
+        v-for="(component, componentName) in componentApi"
+        :key="componentName"
       >
-        {{ color }}
-      </div>
-    </div>
-
-    <div class="section">Components</div>
-
-    <div class="component">StyledButton</div>
-
-    <div class="elements">
-      <StyledButton>Default</StyledButton>
-    </div>
-    <div v-for="option in styledButtonOptions" :key="option">
-      <div class="option">{{ option }}</div>
-      <div class="elements">
-        <StyledButton :color="option">{{ option }}</StyledButton>
-      </div>
-    </div>
-
-    <div class="component">QInput</div>
-    <div v-for="option in quasarInputOptions" :key="option">
-      <div class="option">{{ option }}</div>
-      <div class="elements">
-        <q-input
-          outlined
-          placeholder="outlined"
-          v-bind:[option]="true"
-          v-model="inputModel"
+        <div class="component-name">{{ componentName }}</div>
+        <FlexWrap v-bind="getDefaults('FlexWrap')" class="choices">
+          <q-checkbox
+            v-bind="getDefaults('QCheckbox')"
+            v-for="(propertyName, i) in Object.keys(component)"
+            :key="i"
+            :model-value="getPropertyValue(componentName, propertyName)"
+            @update:model-value="
+              setPropertyValue(componentName, propertyName, syncProps)
+            "
+          >
+            {{ propertyName }}
+          </q-checkbox>
+        </FlexWrap>
+        <FlexWrap
+          v-bind="getDefaults('FlexWrap')"
+          class="elements"
+          v-if="!EXCLUDED_COMPONENTS.includes(componentName)"
         >
-          Default
-        </q-input>
-        <q-input
-          v-bind:[option]="true"
-          v-for="color in quasarColors"
-          :key="color"
-          :color="color"
-          :placeholder="option"
-          v-model="inputModel"
+          <component
+            v-bind="getDefaults(componentName)"
+            :is="componentName"
+            v-model="inputModel"
+          >
+            default
+          </component>
+          <component
+            v-bind="getDefaults(componentName)"
+            :is="componentName"
+            v-for="color in getColors()"
+            :key="color"
+            :color="color"
+            v-model="inputModel"
+          >
+            {{ color }}
+          </component>
+        </FlexWrap>
+
+        <FlexWrap
+          v-if="componentName === 'QColor'"
+          v-bind="getDefaults('FlexWrap')"
+          class="colors"
         >
-          {{ color ? color : 'default' }}
-        </q-input>
-      </div>
-    </div>
+          <div v-for="color in getColors()" :key="color">
+            {{ color }}
+            <q-color
+              v-bind="getDefaults('QColor')"
+              v-model="activeTheme.colors[color]"
+            />
+          </div>
+        </FlexWrap>
+
+        <FlexWrap
+          v-if="componentName === 'FlexWrap'"
+          v-bind="getDefaults(componentName)"
+        >
+          <q-btn v-bind="getDefaults('QBtn')"> one </q-btn>
+          <q-btn v-bind="getDefaults('QBtn')" color="primary"> two </q-btn>
+          <q-btn v-bind="getDefaults('QBtn')" color="secondary"> three </q-btn>
+        </FlexWrap>
+      </FlexWrap>
+    </FlexWrap>
+  </div>
+
+  <div class="save-button-container">
+    <q-btn
+      v-bind="getDefaults('QBtn')"
+      color="primary"
+      icon="save"
+      class="save-button"
+      @click="saveCustomTheme()"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import StyledButton from 'components/StyledButton.vue';
 import DarkToggle from 'src/services/theme/DarkToggle.vue';
 import { useTheme } from 'src/services/theme/theme.service';
 import ThemeToggle from 'src/services/theme/ThemeToggle.vue';
+import { ROUTE_NAMES } from '../router/routes';
+import { useRouter } from 'vue-router';
+import FlexWrap from 'src/components/FlexWrap.vue';
 
 export default defineComponent({
   components: {
-    StyledButton,
     DarkToggle,
     ThemeToggle,
+    FlexWrap,
   },
   setup() {
-    const { toggleDarkMode } = useTheme();
+    const {
+      isDarkActive,
+      activeTheme,
+      componentApi,
+      syncProps,
+      toggleDarkMode,
+      getDefaults,
+      getPropertyValue,
+      setPropertyValue,
+      saveCustomTheme,
+      loadCustomTheme,
+    } = useTheme();
+
+    loadCustomTheme();
+
+    const router = useRouter();
 
     const quasarColors = [
       'primary',
@@ -88,27 +141,34 @@ export default defineComponent({
       'warning',
     ];
 
-    const styledButtonOptions = ['primary', 'negative'];
+    const quasarDarkColors = ['dark', 'dark-page'];
 
-    const quasarInputOptions = [
-      'filled',
-      'outlined',
-      'borderless',
-      'standout',
-      'rounded',
-      'square',
-      'dense',
-      'disable',
-      'readonly',
-      'loading',
-    ];
+    const getColors = () =>
+      isDarkActive.value
+        ? [...quasarColors, ...quasarDarkColors]
+        : quasarColors;
+
+    const navigate = (name: string) => void router.push({ name });
+
+    const EXCLUDED_COMPONENTS = ['QColor', 'FlexWrap'];
 
     return {
-      toggleDarkMode,
-      quasarColors,
-      quasarInputOptions,
-      styledButtonOptions,
+      Object,
+
       inputModel: ref(''),
+      componentApi,
+      activeTheme,
+      syncProps,
+      ROUTE_NAMES,
+      EXCLUDED_COMPONENTS,
+
+      toggleDarkMode,
+      getPropertyValue,
+      setPropertyValue,
+      getColors,
+      getDefaults,
+      saveCustomTheme,
+      navigate,
     };
   },
 });
@@ -120,9 +180,6 @@ export default defineComponent({
 }
 
 .colors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -152,15 +209,30 @@ export default defineComponent({
 }
 
 .elements {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.top-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.options {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.component-name {
+  font-weight: bold;
+}
+
+.choices {
+  margin-bottom: 0.5rem;
+}
+
+.save-button-container {
+  position: sticky;
+  bottom: 0.25rem;
+
+  .save-button {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.25rem;
+  }
 }
 </style>
