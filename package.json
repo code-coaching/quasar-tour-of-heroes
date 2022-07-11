@@ -5,6 +5,7 @@
   "productName": "Quasar Tour of Heroes",
   "author": "Bart Duisters - Code Coaching <info+quasar-tour-of-heroes@code-coaching.dev>",
   "scripts": {
+    "extract": "cd api-extractor && node ./api-extractor.js && cd ..",
     "dev": "quasar dev",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
