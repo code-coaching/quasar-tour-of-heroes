@@ -1,0 +1,4 @@
+export default {
+  failed: 'Actie mislukt',
+  success: 'Actie is gelukt'
+};

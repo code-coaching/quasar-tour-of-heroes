@@ -28,7 +28,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ['axios'],
+    boot: ['axios', 'i18n'],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ['app.scss'],
@@ -89,7 +89,7 @@ module.exports = configure(function (ctx) {
       config: {
         notify: {
           timeout: 3000,
-        }
+        },
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -103,9 +103,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        'Notify',
-      ],
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations

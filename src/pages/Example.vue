@@ -7,6 +7,16 @@
       <ThemeToggle />
     </FlexWrap>
 
+    <div class="section">Translations</div>
+    <FlexWrap class="elements">
+      <div class="translation">
+        {{ t('failed') }}
+      </div>
+      <div class="translation">
+        {{ t('success') }}
+      </div>
+    </FlexWrap>
+
     <div class="section">Theming</div>
 
     <div class="component">Quasar Variables</div>
@@ -106,6 +116,7 @@ import ThemeToggle from 'src/services/theme/ThemeToggle.vue';
 import { ROUTE_NAMES } from '../router/routes';
 import { useRouter } from 'vue-router';
 import FlexWrap from 'src/components/FlexWrap.vue';
+import { useI18n } from 'boot/i18n';
 
 export default defineComponent({
   components: {
@@ -126,6 +137,8 @@ export default defineComponent({
       saveCustomTheme,
       loadCustomTheme,
     } = useTheme();
+
+    const { t } = useI18n();
 
     loadCustomTheme();
 
@@ -169,6 +182,7 @@ export default defineComponent({
       getDefaults,
       saveCustomTheme,
       navigate,
+      t,
     };
   },
 });
@@ -234,5 +248,10 @@ export default defineComponent({
     right: 0.5rem;
     bottom: 0.25rem;
   }
+}
+
+.translation {
+  outline: 1px solid var(--q-primary);
+  padding: 0.5rem;
 }
 </style>
