@@ -1,5 +1,5 @@
 <template>
-  <div class="title">My Heroes</div>
+  <div class="title">{{ t('pages.hero-list.my-heroes') }}</div>
 
   <FlexWrap v-bind="getDefaults('FlexWrap')" column>
     <q-btn
@@ -21,21 +21,23 @@
     class="new-hero-button"
     @click="onNewClick()"
   >
-    New Hero
+    {{ t('pages.hero-list.new-hero') }}
   </q-btn>
 
   <div v-if="selectedHero?.name">
-    <div class="title">{{ upperCase(selectedHero.name) }} is my hero</div>
+    <div class="title">
+      {{ upperCase(selectedHero.name) }} {{ t('pages.hero-list.is-my-hero') }}
+    </div>
     <FlexWrap v-bind="getDefaults('FlexWrap')">
       <q-btn v-bind="getDefaults('QBtn')" @click="onDetailsClick()">
-        Details
+        {{ t('pages.hero-list.details') }}
       </q-btn>
       <q-btn
         v-bind="getDefaults('QBtn')"
         color="negative"
         @click="onDeleteClick()"
       >
-        Delete
+        {{ t('delete') }}
       </q-btn>
     </FlexWrap>
   </div>
@@ -50,6 +52,7 @@ import { Hero } from 'components/models';
 import { useHeroes } from 'src/services/hero.service';
 import FlexWrap from 'src/components/FlexWrap.vue';
 import { useTheme } from 'src/services/theme/theme.service';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   components: {
@@ -65,6 +68,7 @@ export default defineComponent({
       setSelectedHero,
     } = useHeroes();
     const { getDefaults } = useTheme();
+    const { t } = useI18n();
 
     const onClickHero = (hero: Hero) => setSelectedHero(hero);
 
@@ -85,6 +89,7 @@ export default defineComponent({
     const onNewClick = () => void router.push({ name: ROUTE_NAMES.HERO_ADD });
 
     return {
+      t,
       getDefaults,
       heroes,
       selectedHero,

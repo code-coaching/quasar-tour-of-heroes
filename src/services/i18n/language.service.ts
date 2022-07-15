@@ -1,7 +1,7 @@
 import { LocalStorage, Notify } from 'quasar';
 import { useI18n } from 'boot/i18n';
 import { ref } from 'vue';
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 interface Language {
   nativeWord: string;
@@ -28,7 +28,7 @@ const useLanguage = () => {
 
   const saveLanguage = (language: Language) => {
     LocalStorage.set('language', language);
-    Notify.create({ message: 'Language saved', color: 'positive' });
+    Notify.create({ message: t('services.language.language-saved'), color: 'positive' });
   };
 
   const loadLanguage = () => {

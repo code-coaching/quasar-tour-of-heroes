@@ -1,11 +1,13 @@
 <template>
   <q-form v-if="hero" class="details-container" ref="formRef" greedy>
-    <div class="title">{{ hero.name }} details!</div>
+    <div class="title">
+      {{ hero.name }} {{ t('pages.hero-details.details') }}!
+    </div>
 
-    <div>id: {{ hero.number }}</div>
+    <div>{{ t('pages.hero-details.id') }}: {{ hero.number }}</div>
     <q-input
       v-bind="getDefaults('QInput')"
-      label="name"
+      :label="t('name')"
       v-model="hero.name"
       :rules="[required()]"
       lazy-rules
@@ -17,22 +19,22 @@
         class="back-button"
         @click="moveBack()"
       >
-        Back
+        {{ t('back') }}
       </q-btn>
       <q-btn v-bind="getDefaults('QBtn')" color="primary" @click="saveHero()">
-        Save
+        {{ t('save') }}
       </q-btn>
       <q-btn
         v-bind="getDefaults('QBtn')"
         color="negative"
         @click="removeHero()"
       >
-        Delete
+        {{ t('delete') }}
       </q-btn>
     </FlexWrap>
   </q-form>
 
-  <div v-else class="title">Hero not found!</div>
+  <div v-else class="title">{{ t('pages.hero-details.hero-not-found') }}!</div>
 </template>
 
 <script lang="ts">
@@ -44,6 +46,7 @@ import { useHeroes } from 'src/services/hero.service';
 import { useValidators } from 'src/services/validator.composable';
 import { QForm } from 'quasar';
 import { useTheme } from 'src/services/theme/theme.service';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   components: {
@@ -56,6 +59,7 @@ export default defineComponent({
     const { editHero, findHero, deleteHero } = useHeroes();
     const { required } = useValidators();
     const { getDefaults } = useTheme();
+    const { t } = useI18n();
 
     onBeforeMount(() => {
       const { id } = route.params;
@@ -82,6 +86,7 @@ export default defineComponent({
     const formRef = ref({} as QForm);
 
     return {
+      t,
       getDefaults,
       hero,
       moveBack,

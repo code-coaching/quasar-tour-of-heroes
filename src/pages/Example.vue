@@ -3,12 +3,14 @@
     <FlexWrap v-bind="getDefaults('FlexWrap')">
       <q-btn round outline icon="home" @click="navigate(ROUTE_NAMES.HOME)" />
       <DarkToggle />
-      <q-btn @click="toggleDarkMode()">Toggle Dark Mode</q-btn>
+      <q-btn @click="toggleDarkMode()">
+        {{ t('pages.example.toggle-dark-mode') }}
+      </q-btn>
       <ThemeToggle />
       <LanguageToggle />
     </FlexWrap>
 
-    <div class="section">Translations</div>
+    <div class="section">{{ t('pages.example.translations') }}</div>
     <FlexWrap class="elements">
       <div class="translation">
         {{ t('failed') }}
@@ -18,14 +20,12 @@
       </div>
     </FlexWrap>
 
-    <div class="section">Theming</div>
+    <div class="section">{{ t('pages.example.theming') }}</div>
 
-    <div class="component">Quasar Variables</div>
-
-    <div class="component">Component Defaults</div>
+    <div class="component">{{ t('pages.example.component-defaults') }}</div>
     <FlexWrap v-bind="getDefaults('FlexWrap')" class="elements">
       <q-checkbox v-bind="getDefaults('QCheckbox')" v-model="syncProps">
-        Synchronize Props
+        {{ t('pages.example.sync-props') }}
       </q-checkbox>
       <FlexWrap
         v-bind="getDefaults('FlexWrap')"
@@ -58,7 +58,7 @@
             :is="componentName"
             v-model="inputModel"
           >
-            default
+            {{ t('pages.example.default') }}
           </component>
           <component
             v-bind="getDefaults(componentName)"
@@ -90,9 +90,13 @@
           v-if="componentName === 'FlexWrap'"
           v-bind="getDefaults(componentName)"
         >
-          <q-btn v-bind="getDefaults('QBtn')"> one </q-btn>
-          <q-btn v-bind="getDefaults('QBtn')" color="primary"> two </q-btn>
-          <q-btn v-bind="getDefaults('QBtn')" color="secondary"> three </q-btn>
+          <q-btn v-bind="getDefaults('QBtn')"> {{ t('one') }} </q-btn>
+          <q-btn v-bind="getDefaults('QBtn')" color="primary">
+            {{ t('two') }}
+          </q-btn>
+          <q-btn v-bind="getDefaults('QBtn')" color="secondary">
+            {{ t('three') }}
+          </q-btn>
         </FlexWrap>
       </FlexWrap>
     </FlexWrap>

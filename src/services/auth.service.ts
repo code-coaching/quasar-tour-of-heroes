@@ -2,6 +2,8 @@ import { api } from 'src/boot/axios';
 import { User } from 'src/components/models';
 import { readonly, ref, computed } from 'vue';
 import { Notify } from 'quasar';
+import { useI18n } from 'src/boot/i18n';
+const { t } = useI18n();
 
 const authenticatedUser = ref({} as User);
 
@@ -45,24 +47,24 @@ const useAuth = () => {
         .then((result: { data: { accessToken: string; user: User } }) => {
           const accessToken = result.data.accessToken;
           if (accessToken) {
-            Notify.create({ message: 'Logged in', color: 'positive' });
+            Notify.create({ message: t('services.auth.logged-in'), color: 'positive' });
             localStorage.setItem('accessToken', accessToken);
             authenticatedUser.value = result.data.user;
             resolve();
           } else {
-            Notify.create({ message: 'Login failed', color: 'negative' });
+            Notify.create({ message: t('services.auth.login-failed'), color: 'negative' });
             reject();
           }
         })
         .catch(() => {
-          Notify.create({ message: 'Login failed', color: 'negative' });
+          Notify.create({ message: t('services.auth.login-failed'), color: 'negative' });
           reject();
         });
     });
   };
 
   const logout = () => {
-    Notify.create({ message: 'Logged out', color: 'positive' });
+    Notify.create({ message: t('services.auth.logged-out'), color: 'positive' });
     localStorage.removeItem('accessToken');
     authenticatedUser.value = {} as User;
   };

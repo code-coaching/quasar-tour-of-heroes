@@ -1,6 +1,8 @@
 import { Dark, LocalStorage, setCssVar, Notify } from 'quasar';
+import { useI18n } from 'src/boot/i18n';
 import { computed, Ref, ref, watch } from 'vue';
 import { ComponentApi, componentApi, getDefaults, getPropertyValue, setPropertyValue, syncProps } from './api';
+const { t } = useI18n();
 
 interface Theme {
   isDark: boolean;
@@ -99,7 +101,7 @@ const useTheme = () => {
   const saveCustomTheme = () => {
     LocalStorage.set('theme', { ...activeTheme.value, name: 'Custom', custom: true });
     LocalStorage.set('properties', componentApi.value);
-    Notify.create({ message: 'Theme saved', color: 'positive' });
+    Notify.create({ message: t('services.theme.theme-saved'), color: 'positive' });
 
     const customTheme = themes.findIndex(t => t.name === 'Custom');
     themes[customTheme] = activeTheme.value;

@@ -1,19 +1,21 @@
 <template>
   <q-form class="add-container" ref="formRef" greedy>
-    <div class="title">Add hero</div>
+    <div class="title">{{ t('pages.hero-add.add-hero') }}</div>
 
     <q-input
       v-bind="getDefaults('QInput')"
-      label="name"
+      :label="t('name')"
       v-model="name"
       :rules="[required()]"
       lazy-rules
     />
 
     <FlexWrap v-bind="getDefaults('FlexWrap')" class="button-group">
-      <q-btn v-bind="getDefaults('QBtn')" @click="moveBack()">Back</q-btn>
+      <q-btn v-bind="getDefaults('QBtn')" @click="moveBack()">
+        {{ t('back') }}
+      </q-btn>
       <q-btn v-bind="getDefaults('QBtn')" color="primary" @click="saveHero()">
-        Save
+        {{ t('save') }}
       </q-btn>
     </FlexWrap>
   </q-form>
@@ -27,6 +29,7 @@ import { useHeroes } from 'src/services/hero.service';
 import { useValidators } from 'src/services/validator.composable';
 import { QForm } from 'quasar';
 import { useTheme } from 'src/services/theme/theme.service';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   components: {
@@ -38,6 +41,7 @@ export default defineComponent({
     const { addHero } = useHeroes();
     const { required } = useValidators();
     const { getDefaults } = useTheme();
+    const { t } = useI18n();
 
     const moveBack = () => void router.go(-1);
     const saveHero = () => {
@@ -52,6 +56,7 @@ export default defineComponent({
     const formRef = ref({} as QForm);
 
     return {
+      t,
       getDefaults,
       name,
       moveBack,

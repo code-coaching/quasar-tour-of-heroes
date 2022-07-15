@@ -19,7 +19,7 @@
       />
     </q-form>
     <q-btn v-bind="getDefaults('QBtn')" color="primary" @click="login()">
-      Login
+      {{ t('login') }}
     </q-btn>
   </FlexWrap>
 </template>
@@ -33,6 +33,7 @@ import { QForm } from 'quasar';
 import { useValidators } from 'src/services/validator.composable';
 import { useTheme } from 'src/services/theme/theme.service';
 import FlexWrap from 'src/components/FlexWrap.vue';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   components: {
@@ -47,6 +48,7 @@ export default defineComponent({
       password: '',
     });
     const { getDefaults } = useTheme();
+    const { t } = useI18n();
 
     const login = () => {
       void formRef.value.validate().then((valid) => {
@@ -66,6 +68,7 @@ export default defineComponent({
     const formRef = ref({} as QForm);
 
     return {
+      t,
       getDefaults,
       login,
       user,

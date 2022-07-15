@@ -3,6 +3,8 @@ import { api } from 'src/boot/axios';
 import { BackendHero, Hero } from 'src/components/models';
 import { readonly, Ref, ref, computed } from 'vue';
 import { Notify } from 'quasar';
+import { useI18n } from 'src/boot/i18n';
+const { t } = useI18n();
 
 interface Paged<T> {
   total: number;
@@ -51,10 +53,10 @@ const useHeroes = () => {
       api
         .patch(`/heroes/${hero._id}`, hero, getRequestConfig())
         .then(() =>
-          Notify.create({ message: 'Hero updated', color: 'positive' })
+          Notify.create({ message: t('services.hero.hero-updated'), color: 'positive' })
         )
         .catch(() => {
-          Notify.create({ message: 'Hero update failed', color: 'negative' });
+          Notify.create({ message: t('services.hero.hero-update-failed'), color: 'negative' });
           heroes.value[index] = oldHero;
         });
     }
@@ -73,11 +75,11 @@ const useHeroes = () => {
       api
         .delete(`/heroes/${hero._id}`, getRequestConfig())
         .then(() =>
-          Notify.create({ message: 'Hero deleted', color: 'positive' })
+          Notify.create({ message: t('services.hero.hero-deleted'), color: 'positive' })
         )
         .catch(() => {
           Notify.create({
-            message: 'Failed to delete hero',
+            message: t('services.hero.failed-to-delete-hero'),
             color: 'negative',
           });
           heroes.value.splice(index, 0, hero);
@@ -105,11 +107,11 @@ const useHeroes = () => {
         getRequestConfig()
       )
       .then((result) => {
-        Notify.create({ message: 'Hero added', type: 'positive' });
+        Notify.create({ message: t('services.hero.hero-added'), type: 'positive' });
         heroes.value[index] = { ...result.data, number: result.data.id };
       })
       .catch(() => {
-        Notify.create({ message: 'Error adding hero', type: 'negative' });
+        Notify.create({ message: t('services.hero.error-adding-hero'), type: 'negative' });
         const index = heroes.value.findIndex((e) => e === newHero);
         heroes.value.splice(index, 1);
       });
@@ -119,6 +121,7 @@ const useHeroes = () => {
   const setSelectedHero = (hero: Hero) => (selectedHero.value = hero);
 
   return {
+    t,
     heroes: readonly(heroes),
     selectedHero: readonly(selectedHero),
     topHeroes,

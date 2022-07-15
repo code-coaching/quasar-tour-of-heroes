@@ -14,7 +14,7 @@
       v-if="!isAuthenticated"
       @click="navigate(ROUTE_NAMES.LOGIN)"
     >
-      Login
+      {{ t('login') }}
     </q-btn>
     <q-btn
       v-bind="getDefaults('QBtn')"
@@ -22,23 +22,23 @@
       v-else
       @click="logout()"
     >
-      Logout
+      {{ t('logout') }}
     </q-btn>
   </div>
   <div class="layout-container">
-    <div class="title">Tour of Heroes</div>
+    <div class="title">{{ t('layouts.main.title') }}</div>
     <FlexWrap v-bind="getDefaults('FlexWrap')">
       <q-btn
         v-bind="getDefaults('QBtn')"
         @click="navigate(ROUTE_NAMES.DASHBOARD)"
       >
-        Dashboard
+        {{ t('navigation.dashboard') }}
       </q-btn>
       <q-btn
         v-bind="getDefaults('QBtn')"
         @click="navigate(ROUTE_NAMES.HERO_LIST)"
       >
-        Heroes
+        {{ t('navigation.heroes') }}
       </q-btn>
     </FlexWrap>
 
@@ -56,6 +56,7 @@ import { useTheme } from 'src/services/theme/theme.service';
 import DarkToggle from '../services/theme/DarkToggle.vue';
 import FlexWrap from 'src/components/FlexWrap.vue';
 import { useLanguage } from 'src/services/i18n/language.service';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   components: {
@@ -69,6 +70,7 @@ export default defineComponent({
     const { getHeroes } = useHeroes();
     const { loadCustomTheme, getDefaults } = useTheme();
     const { loadLanguage } = useLanguage();
+    const { t } = useI18n();
     loadCustomTheme();
     loadLanguage();
 
@@ -109,6 +111,7 @@ export default defineComponent({
     };
 
     return {
+      t,
       getDefaults,
       navigate,
       ROUTE_NAMES,
