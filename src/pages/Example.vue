@@ -1,5 +1,7 @@
 <template>
   <div class="example-page">
+    <!-- <q-input /> -->
+
     <FlexWrap v-bind="getDefaults('FlexWrap')">
       <q-btn round outline icon="home" @click="navigate(ROUTE_NAMES.HOME)" />
       <DarkToggle />
