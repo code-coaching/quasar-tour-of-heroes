@@ -1,9 +1,5 @@
 export default {
   failed: 'Action failed',
   success: 'Action was successful',
-  pages: {
-    dashboard: {
-      title: 'Top Heroes',
-    },
-  },
+  'pages.dashboard.title': 'Top Heroes',
 };
