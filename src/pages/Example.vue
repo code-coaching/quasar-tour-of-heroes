@@ -5,6 +5,7 @@
       <DarkToggle />
       <q-btn @click="toggleDarkMode()">Toggle Dark Mode</q-btn>
       <ThemeToggle />
+      <LanguageToggle />
     </FlexWrap>
 
     <div class="section">Translations</div>
@@ -117,12 +118,15 @@ import { ROUTE_NAMES } from '../router/routes';
 import { useRouter } from 'vue-router';
 import FlexWrap from 'src/components/FlexWrap.vue';
 import { useI18n } from 'boot/i18n';
+import LanguageToggle from 'src/services/i18n/LanguageToggle.vue';
+import { useLanguage } from 'src/services/i18n/language.service';
 
 export default defineComponent({
   components: {
     DarkToggle,
     ThemeToggle,
     FlexWrap,
+    LanguageToggle,
   },
   setup() {
     const {
@@ -138,9 +142,12 @@ export default defineComponent({
       loadCustomTheme,
     } = useTheme();
 
+    const { loadLanguage } = useLanguage();
+
     const { t } = useI18n();
 
     loadCustomTheme();
+    loadLanguage();
 
     const router = useRouter();
 

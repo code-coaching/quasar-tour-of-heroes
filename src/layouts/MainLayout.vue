@@ -55,6 +55,7 @@ import { useHeroes } from 'src/services/hero.service';
 import { useTheme } from 'src/services/theme/theme.service';
 import DarkToggle from '../services/theme/DarkToggle.vue';
 import FlexWrap from 'src/components/FlexWrap.vue';
+import { useLanguage } from 'src/services/i18n/language.service';
 
 export default defineComponent({
   components: {
@@ -67,7 +68,9 @@ export default defineComponent({
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
     const { getHeroes } = useHeroes();
     const { loadCustomTheme, getDefaults } = useTheme();
+    const { loadLanguage } = useLanguage();
     loadCustomTheme();
+    loadLanguage();
 
     watch(isAuthenticated, (newValue) => {
       if (newValue) {
