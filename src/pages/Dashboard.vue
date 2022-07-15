@@ -1,5 +1,5 @@
 <template>
-  <div class="title">Top Heroes</div>
+  <div class="title">{{ t('pages.dashboard.title') }}</div>
 
   <div class="top-heroes">
     <div
@@ -19,11 +19,13 @@ import { useHeroes } from 'src/services/hero.service';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { useRouter } from 'vue-router';
 import { Hero } from 'src/components/models';
+import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   setup() {
     const { topHeroes } = useHeroes();
     const router = useRouter();
+    const { t } = useI18n();
 
     const navigateToHero = (hero: Hero) => {
       void router.push({
@@ -35,6 +37,7 @@ export default defineComponent({
     };
 
     return {
+      t,
       topHeroes,
       navigateToHero,
     };
