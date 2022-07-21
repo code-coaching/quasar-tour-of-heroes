@@ -44,12 +44,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { upperCase } from 'components/utils';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { Hero } from 'components/models';
-import { useHeroes } from 'src/services/hero.service';
+import { useHeroesStore } from 'src/stores/hero.store';
 import FlexWrap from 'src/components/FlexWrap.vue';
 import { useTheme } from 'src/services/theme/theme.service';
 import { useI18n } from 'src/boot/i18n';
@@ -60,30 +60,24 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const {
-      heroes,
-      selectedHero,
-      deleteHero,
-      resetSelectedHero,
-      setSelectedHero,
-    } = useHeroes();
+    const heroesStore = useHeroesStore();
     const { getDefaults } = useTheme();
     const { t } = useI18n();
 
-    const onClickHero = (hero: Hero) => setSelectedHero(hero);
+    const onClickHero = (hero: Hero) => heroesStore.setSelectedHero(hero);
 
     const onDetailsClick = () => {
       void router.push({
         name: ROUTE_NAMES.HERO_DETAILS,
         params: {
-          id: selectedHero.value.number,
+          id: heroesStore.selectedHero.number,
         },
       });
     };
 
     const onDeleteClick = () => {
-      deleteHero(selectedHero.value);
-      resetSelectedHero();
+      heroesStore.deleteHero(heroesStore.selectedHero);
+      heroesStore.resetSelectedHero();
     };
 
     const onNewClick = () => void router.push({ name: ROUTE_NAMES.HERO_ADD });
@@ -91,8 +85,8 @@ export default defineComponent({
     return {
       t,
       getDefaults,
-      heroes,
-      selectedHero,
+      heroes: computed(() => heroesStore.heroes),
+      selectedHero: computed(() => heroesStore.selectedHero),
       onClickHero,
       upperCase,
       onDetailsClick,

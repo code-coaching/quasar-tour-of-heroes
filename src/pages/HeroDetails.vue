@@ -42,7 +42,7 @@ import { defineComponent, onBeforeMount, ref, Ref } from 'vue';
 import FlexWrap from 'components/FlexWrap.vue';
 import { Hero } from 'components/models';
 import { useRoute, useRouter } from 'vue-router';
-import { useHeroes } from 'src/services/hero.service';
+import { useHeroesStore } from 'src/stores/hero.store';
 import { useValidators } from 'src/services/validator.composable';
 import { QForm } from 'quasar';
 import { useTheme } from 'src/services/theme/theme.service';
@@ -56,7 +56,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const hero: Ref<Hero> = ref() as Ref<Hero>;
-    const { editHero, findHero, deleteHero } = useHeroes();
+    const heroesStore = useHeroesStore();
     const { required } = useValidators();
     const { getDefaults } = useTheme();
     const { t } = useI18n();
@@ -64,7 +64,7 @@ export default defineComponent({
     onBeforeMount(() => {
       const { id } = route.params;
       if (id) {
-        const matchingHero = findHero(id.toString());
+        const matchingHero = heroesStore.findHero(id.toString());
         if (matchingHero) hero.value = matchingHero;
       }
     });
@@ -73,13 +73,13 @@ export default defineComponent({
     const saveHero = () => {
       void formRef.value.validate().then((valid) => {
         if (valid) {
-          editHero(hero.value);
+          heroesStore.editHero(hero.value);
           moveBack();
         }
       });
     };
     const removeHero = () => {
-      deleteHero(hero.value);
+      heroesStore.deleteHero(hero.value);
       moveBack();
     };
 

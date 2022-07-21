@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useHeroes } from 'src/services/hero.service';
+import { computed, defineComponent } from 'vue';
+import { useHeroesStore } from 'src/stores/hero.store';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { useRouter } from 'vue-router';
 import { Hero } from 'src/components/models';
@@ -23,7 +23,7 @@ import { useI18n } from 'src/boot/i18n';
 
 export default defineComponent({
   setup() {
-    const { topHeroes } = useHeroes();
+    const heroesStore = useHeroesStore();
     const router = useRouter();
     const { t } = useI18n();
 
@@ -38,7 +38,7 @@ export default defineComponent({
 
     return {
       t,
-      topHeroes,
+      topHeroes: computed(() => heroesStore.topHeroes),
       navigateToHero,
     };
   },

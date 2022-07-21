@@ -51,7 +51,7 @@ import { defineComponent, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
 import { useAuth } from 'src/services/auth.service';
-import { useHeroes } from 'src/services/hero.service';
+import { useHeroesStore } from 'src/stores/hero.store';
 import { useTheme } from 'src/services/theme/theme.service';
 import DarkToggle from '../services/theme/DarkToggle.vue';
 import FlexWrap from 'src/components/FlexWrap.vue';
@@ -67,7 +67,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
-    const { getHeroes } = useHeroes();
+    const heroesStore = useHeroesStore();
     const { loadCustomTheme, getDefaults } = useTheme();
     const { loadLanguage } = useLanguage();
     const { t } = useI18n();
@@ -76,7 +76,7 @@ export default defineComponent({
 
     watch(isAuthenticated, (newValue) => {
       if (newValue) {
-        void getHeroes();
+        void heroesStore.getHeroes();
       } else {
         void router.push({ name: ROUTE_NAMES.LOGIN });
       }
@@ -92,7 +92,7 @@ export default defineComponent({
             if (!isAuthenticated.value) {
               tryToAuthenticate()
                 .then(() => {
-                  void getHeroes();
+                  void heroesStore.getHeroes();
                 })
                 .catch(() => {
                   void router.push({ name: ROUTE_NAMES.LOGIN });

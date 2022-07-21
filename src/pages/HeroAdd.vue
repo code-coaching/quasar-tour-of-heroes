@@ -25,7 +25,7 @@
 import { defineComponent, ref } from 'vue';
 import FlexWrap from 'components/FlexWrap.vue';
 import { useRouter } from 'vue-router';
-import { useHeroes } from 'src/services/hero.service';
+import { useHeroesStore } from 'src/stores/hero.store';
 import { useValidators } from 'src/services/validator.composable';
 import { QForm } from 'quasar';
 import { useTheme } from 'src/services/theme/theme.service';
@@ -38,7 +38,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const name = ref('');
-    const { addHero } = useHeroes();
+    const heroesStore = useHeroesStore();
     const { required } = useValidators();
     const { getDefaults } = useTheme();
     const { t } = useI18n();
@@ -47,7 +47,7 @@ export default defineComponent({
     const saveHero = () => {
       void formRef.value.validate().then((valid) => {
         if (valid) {
-          addHero(name.value);
+          heroesStore.addHero(name.value);
           moveBack();
         }
       });
