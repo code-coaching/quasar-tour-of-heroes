@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { useAuth } from 'src/services/auth.service';
+import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAMES } from 'src/router/routes';
 import { QForm } from 'quasar';
@@ -41,7 +41,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const { login: authenticate } = useAuth();
+    const authStore = useAuthStore();
     const { emailRules, passwordRules } = useValidators();
     const user = reactive({
       email: '',
@@ -53,7 +53,8 @@ export default defineComponent({
     const login = () => {
       void formRef.value.validate().then((valid) => {
         if (valid) {
-          authenticate(user.email, user.password)
+          authStore
+            .login(user.email, user.password)
             .then(() => {
               void router.push({ name: ROUTE_NAMES.DASHBOARD });
             })

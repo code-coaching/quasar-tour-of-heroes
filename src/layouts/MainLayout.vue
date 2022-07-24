@@ -50,13 +50,14 @@
 import { defineComponent, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ROUTE_NAMES } from '../router/routes';
-import { useAuth } from 'src/services/auth.service';
+import { useAuthStore } from 'src/stores/auth.store';
 import { useHeroesStore } from 'src/stores/hero.store';
 import { useTheme } from 'src/services/theme/theme.service';
 import DarkToggle from '../services/theme/DarkToggle.vue';
 import FlexWrap from 'src/components/FlexWrap.vue';
 import { useLanguage } from 'src/services/i18n/language.service';
 import { useI18n } from 'src/boot/i18n';
+import { computed } from '@vue/reactivity';
 
 export default defineComponent({
   components: {
@@ -66,7 +67,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const { tryToAuthenticate, isAuthenticated, logout } = useAuth();
+    const authStore = useAuthStore();
     const heroesStore = useHeroesStore();
     const { loadCustomTheme, getDefaults } = useTheme();
     const { loadLanguage } = useLanguage();
@@ -74,13 +75,16 @@ export default defineComponent({
     loadCustomTheme();
     loadLanguage();
 
-    watch(isAuthenticated, (newValue) => {
-      if (newValue) {
-        void heroesStore.getHeroes();
-      } else {
-        void router.push({ name: ROUTE_NAMES.LOGIN });
+    watch(
+      () => authStore.isAuthenticated,
+      (newValue) => {
+        if (newValue) {
+          void heroesStore.getHeroes();
+        } else {
+          void router.push({ name: ROUTE_NAMES.LOGIN });
+        }
       }
-    });
+    );
 
     watch(
       () => route.path,
@@ -89,8 +93,9 @@ export default defineComponent({
 
         if (route.name) {
           if (!routesWithoutAuth.includes(route.name.toString())) {
-            if (!isAuthenticated.value) {
-              tryToAuthenticate()
+            if (!authStore.isAuthenticated) {
+              authStore
+                .tryToAuthenticate()
                 .then(() => {
                   void heroesStore.getHeroes();
                 })
@@ -115,8 +120,8 @@ export default defineComponent({
       getDefaults,
       navigate,
       ROUTE_NAMES,
-      isAuthenticated,
-      logout,
+      isAuthenticated: computed(() => authStore.isAuthenticated),
+      logout: () => authStore.logout(),
     };
   },
 });
