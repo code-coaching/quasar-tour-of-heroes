@@ -23,7 +23,7 @@ const getRequestConfig = (): AxiosRequestConfig => {
   };
 };
 
-export const useHeroesStore = defineStore('heroes', {
+export const useHeroesStore = defineStore('heroStore', {
   state: () => ({
     heroes: [] as Array<Hero>,
     selectedHero: {} as Hero
